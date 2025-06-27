@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rajavithi Hospital Library Publication</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #fff;
+            padding: 30px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .search-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .search-btn:hover {
+            background: #0056b3;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: 600;
+            color: #495057;
+            border: 1px solid #dee2e6;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 10px;
+            border: 1px solid #dee2e6;
+            vertical-align: top;
+        }
+
+        .publication-type {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #007bff;
+            font-weight: 600;
+            text-align: left;
+            padding: 5px;
+            width: 100%;
+        }
+
+        .publication-type:hover {
+            background: #f8f9fa;
+            border-radius: 3px;
+        }
+
+        .date-cell {
+            text-align: center;
+            white-space: nowrap;
+            min-width: 100px;
+        }
+
+        .title-cell {
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+
+        .author-cell {
+            max-width: 200px;
+            word-wrap: break-word;
+        }
+
+        .department-cell {
+            max-width: 150px;
+            word-wrap: break-word;
+            font-size: 13px;
+        }
+
+        .download-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-right: 5px;
+        }
+
+        .download-btn:hover {
+            background: #138496;
+        }
+
+        .language-tag {
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #495057;
+        }
+
+        .abstract-row {
+            display: none;
+            background: #f8f9fa;
+        }
+
+        .abstract-row.show {
+            display: table-row;
+        }
+
+        .abstract-content {
+            padding: 20px;
+            line-height: 1.6;
+            color: #495057;
+            text-align: justify;
+        }
+
+        .abstract-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .expanded {
+            color: #dc3545;
+        }
+
+        .collapsed {
+            color: #007bff;
+        }
+
+        .row-highlight:hover {
+            background: #f1f3f4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Rajavithi Hospital Library Publication</h1>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search">
+                <button class="search-btn">🔍</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ประเภทบทความ</th>
+                        <th>วันที่เผยแพร่</th>
+                        <th>เลขที่</th>
+                        <th>เรื่อง</th>
+                        <th>ผู้นิพนธ์</th>
+                        <th>แผนก</th>
+                        <th>ความโปร่งใส</th>
+                        <th>ภาษา</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="row-highlight">
+                        <td>
+                            <button class="publication-type" onclick="toggleAbstract(this, 'abstract1')">+ งานนิพนธ์ต้นฉบับ</button>
+                        </td>
+                        <td class="date-cell">07-Mar-25</td>
+                        <td class="date-cell">2568-86</td>
+                        <td class="title-cell">Symmetry Measurement of Zygomatico-Maxillary Complex การทำความใกล้เคียงของก้อนใส้ปากในใส้พกบาลราชวิถี</td>
+                        <td class="author-cell">Thummanoon Phanomthum, M.D., Watunyou Roengrun, M.D. ธรรมนูน พานมธุม, วทันยู เรืองร่น พ.บ.</td>
+                        <td class="department-cell">Plastic Surgery Unit, Department of Surgery งานศัลยกรรมสร้างรูป กลุ่มงานศัลยกรรมศาสตร์</td>
+                        <td>
+                            <button class="download-btn">Download</button>
+                        </td>
+                        <td>
+                            <span class="language-tag">English</span>
+                        </td>
+                    </tr>
+                    <tr id="abstract1" class="abstract-row">
+                        <td colspan="8">
+                            <div class="abstract-content">
+                                <div class="abstract-label">บทคัดย่อ:</div>
+                                <p>การวิจัยนี้มีวัตถุประสงค์เพื่อศึกษาการวัดความสมมาตรของโครงสร้างใบหน้าในผู้ป่วยที่ได้รับการผ่าตัดเชิงซ้อนบริเวณใบหน้า โดยเฉพาะอย่างยิ่งในบริเวณ Zygomatico-Maxillary Complex ซึ่งเป็นโครงสร้างสำคัญของใบหน้าที่มีผลต่อความสวยงามและการทำหน้าที่ของใบหน้า การศึกษานี้ใช้เทคโนโลยีการถ่ายภาพทางการแพทย์และการวิเคราะห์ภาพเพื่อประเมินความสมมาตรก่อนและหลังการผ่าตัด ผลการศึกษาแสดงให้เห็นถึงความสำคัญของการวัดความสมมาตรในการวางแผนการรักษาและประเมินผลการรักษาผู้ป่วยที่มีความผิดปกติของโครงสร้างใบหน้า</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="row-highlight">
+                        <td>
+                            <button class="publication-type" onclick="toggleAbstract(this, 'abstract2')">+ กรณีศึกษา</button>
+                        </td>
+                        <td class="date-cell">24-Jan-25</td>
+                        <td class="date-cell">2568-85</td>
+                        <td class="title-cell">การพยาบาลผู้ป่วยจักรรกทีมีภาวะพอหัด</td>
+                        <td class="author-cell">ชมมิตรา นิมิต, พย.ม.</td>
+                        <td class="department-cell">กลุ่มงานการพยาบาลผู้ป่วยนอก</td>
+                        <td>
+                            <button class="download-btn">Download</button>
+                        </td>
+                        <td>
+                            <span class="language-tag">ไทย</span>
+                        </td>
+                    </tr>
+                    <tr id="abstract2" class="abstract-row">
+                        <td colspan="8">
+                            <div class="abstract-content">
+                                <div class="abstract-label">บทคัดย่อ:</div>
+                                <p>กรณีศึกษานี้นำเสนอการดูแลผู้ป่วยในโรคระบบทางเดินหายใจที่มีภาวะแทรกซ้อนจากพอหัดลุม และการใชโครงดัดเงื่อนใหมีโครงสร้างรายย่าง ความทางกายของบุคคารไม่ทราบสู่มมคอระหว่างไดอยส์ดอดเจ็บ
+                                ครั้งนั้น ไม่มอบพิมพ์ในช่วงของแพทย์มีมีภาวะระบบคำนำรอยมรกษาเตนรสกำฮ วิงคราส และเช่น มิผีวาแยภตรรเปล่าม การวิ-ฮคน-เงียไว้ใบรับราบวายลดีทอขดเท่วเห่าบรองไม่ให้เปนมการมุดลังเล่าร-มีโดยรเปี้มเปื้อการดำอากัมอ-พแป็กเมส กั้นน้ำ ความรอพจำเงินซม พนื้นโลกราว้ายยก็ย อเฃเ่ารคคำ็ดใส่ในกับงสอบงาน 26 ปี อายุครรค์ 36+1 สัปดาห์ เป็น1โรคขอมอิทรรมกมมีภาวะอ้วน มีโซระมำดใคษษาดิวเคลอดบรา้ ในระยะยัยรก์ ระยะถออลก และหยุังคอลก
+                                ไม่มีภาวะแทรกซ้อนจากโรคขอมอิท มีภาวะอรรมสำคุ่ยทและจากกกวิส หรียมีคำกองกพน่ำยัยักรี่มไม่มีภาวะแทรกซ้อน พาร่มทมายไข่ในกรวาจิรรคำลไม่
+                                เนื่องจากคมบณณย่านี้นสร่ยเดพัียำรคลย์ริบทางคำยำรยืเทลดเจดั่ผมมมยายาไลดบอนคาลณณมี่ด
+                                สรุป: พยาบาลที่ได้การอุบลมั่งศัยรกมีเป็นโรคขอมอิทต้องมีความรู้ ความเข้าใจ และมีทักษะในการอุบลมแบววาลและการปปจการพยาบาล เพื่อป้องกันการเกิดการแทรกซ้อนหรุ่งศัยครราและการมในโรครรค</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function toggleAbstract(button, abstractId) {
+            const abstractRow = document.getElementById(abstractId);
+            const isExpanded = abstractRow.classList.contains('show');
+            
+            if (isExpanded) {
+                // ย่อ - เปลี่ยนเป็น +
+                abstractRow.classList.remove('show');
+                if (button.textContent.includes('งานนิพนธ์ต้นฉบับ')) {
+                    button.textContent = '+ งานนิพนธ์ต้นฉบับ';
+                } else if (button.textContent.includes('กรณีศึกษา')) {
+                    button.textContent = '+ กรณีศึกษา';
+                }
+            } else {
+                // ขยาย - เปลี่ยนเป็น -
+                abstractRow.classList.add('show');
+                if (button.textContent.includes('งานนิพนธ์ต้นฉบับ')) {
+                    button.textContent = '- งานนิพนธ์ต้นฉบับ';
+                } else if (button.textContent.includes('กรณีศึกษา')) {
+                    button.textContent = '- กรณีศึกษา';
+                }
+            }
+        }
+
+        // เพิ่มฟังก์ชันค้นหา
+        document.querySelector('.search-input').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr:not(.abstract-row)');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                    // ซ่อน abstract row ด้วยถ้าแถวหลักถูกซ่อน
+                    const nextRow = row.nextElementSibling;
+                    if (nextRow && nextRow.classList.contains('abstract-row')) {
+                        nextRow.style.display = 'none';
+                    }
+                }
+            });
+        });
+
+        // เพิ่มฟังก์ชันสำหรับปุ่ม Download
+        document.querySelectorAll('.download-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('เริ่มดาวน์โหลดไฟล์...');
+            });
+        });
+    </script>
+</body>
+</html>
