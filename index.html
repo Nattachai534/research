@@ -38,6 +38,46 @@
             margin-bottom: 20px;
         }
 
+        .menu-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .menu-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .menu-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .menu-btn:active {
+            transform: translateY(0);
+        }
+
+        .menu-btn.secondary {
+            background: #6c757d;
+        }
+
+        .menu-btn.secondary:hover {
+            background: #5a6268;
+        }
+
         .search-container {
             display: flex;
             gap: 10px;
@@ -193,6 +233,12 @@
     <div class="container">
         <div class="header">
             <h1>Rajavithi Hospital Library Publication</h1>
+            
+            <div class="menu-container">
+                <a href="#" class="menu-btn" onclick="openCriteria()">📋 หลักเกณฑ์การส่งบทความ</a>
+                <a href="#" class="menu-btn secondary" onclick="downloadTemplate()">📄 ดาวน์โหลดแม่แบบเอกสาร</a>
+            </div>
+            
             <div class="search-container">
                 <input type="text" class="search-input" placeholder="Search">
                 <button class="search-btn">🔍</button>
@@ -315,7 +361,18 @@
             });
         });
 
-        // เพิ่มฟังก์ชันสำหรับปุ่ม Download
+        // ฟังก์ชันสำหรับปุ่มเมนู
+        function openCriteria() {
+            // เปิดหน้าหลักเกณฑ์การส่งบทความ
+            alert('เปิดหน้าหลักเกณฑ์การส่งบทความ\n\nจะนำทางไปยัง: /criteria.html');
+            // window.open('https://drive.google.com/file/d/11llERujw5ByMJKN0-e6a4-0XiccCnqRH/view', '_blank');
+        }
+
+        function downloadTemplate() {
+            // ดาวน์โหลดแม่แบบเอกสาร
+            alert('เริ่มดาวน์โหลดแม่แบบเอกสาร\n\nไฟล์: template_document.docx');
+            // window.location.href = 'https://docs.google.com/document/d/1jecc07eGOYl-sPcWT0N-WDW7mnpEdTfj/edit';
+        }
         document.querySelectorAll('.download-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 alert('เริ่มดาวน์โหลดไฟล์...');
