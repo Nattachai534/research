@@ -364,14 +364,14 @@
         // ฟังก์ชันสำหรับปุ่มเมนู
         function openCriteria() {
             // เปิดหน้าหลักเกณฑ์การส่งบทความ
-            alert('เปิดหน้าหลักเกณฑ์การส่งบทความ\n\nจะนำทางไปยัง: /criteria.html');
-            // window.open('https://drive.google.com/file/d/11llERujw5ByMJKN0-e6a4-0XiccCnqRH/view', '_blank');
+            alert('เปิดหน้าหลักเกณฑ์การส่งบทความ\n\nจะนำทางไปยัง: https://drive.google.com/file/d/11llERujw5ByMJKN0-e6a4-0XiccCnqRH/view');
+            // window.open('/criteria.html', '_blank');
         }
 
         function downloadTemplate() {
             // ดาวน์โหลดแม่แบบเอกสาร
-            alert('เริ่มดาวน์โหลดแม่แบบเอกสาร\n\nไฟล์: template_document.docx');
-            // window.location.href = 'https://docs.google.com/document/d/1jecc07eGOYl-sPcWT0N-WDW7mnpEdTfj/edit';
+            alert('เริ่มดาวน์โหลดแม่แบบเอกสาร\n\nไฟล์: https://docs.google.com/document/d/1jecc07eGOYl-sPcWT0N-WDW7mnpEdTfj/edit');
+            // window.location.href = '/download/template_document.docx';
         }
         document.querySelectorAll('.download-btn').forEach(btn => {
             btn.addEventListener('click', function() {
