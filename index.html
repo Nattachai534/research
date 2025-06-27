@@ -232,11 +232,11 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Rajavithi Hospital Library Publication</h1>
+            <h1>เผยแพร่ผลงานวิชาการพยาบาล ภารกิจด้านการพยาบาล</h1>
             
             <div class="menu-container">
-                <a href="#" class="menu-btn" onclick="openCriteria()">📋 หลักเกณฑ์การส่งบทความ</a>
-                <a href="#" class="menu-btn secondary" onclick="downloadTemplate()">📄 ดาวน์โหลดแม่แบบเอกสาร</a>
+                <a href="https://drive.google.com/file/d/11llERujw5ByMJKN0-e6a4-0XiccCnqRH/view" class="menu-btn" onclick="openCriteria()">📋 หลักเกณฑ์การส่งบทความ</a>
+                <a href="https://docs.google.com/document/d/1jecc07eGOYl-sPcWT0N-WDW7mnpEdTfj/edit" class="menu-btn secondary" onclick="downloadTemplate()">📄 ดาวน์โหลดแม่แบบเอกสาร</a>
             </div>
             
             <div class="search-container">
@@ -255,7 +255,7 @@
                         <th>เรื่อง</th>
                         <th>ผู้นิพนธ์</th>
                         <th>แผนก</th>
-                        <th>ความโปร่งใส</th>
+                        <th>ดาวน์โหลด</th>
                         <th>ภาษา</th>
                     </tr>
                 </thead>
@@ -364,13 +364,13 @@
         // ฟังก์ชันสำหรับปุ่มเมนู
         function openCriteria() {
             // เปิดหน้าหลักเกณฑ์การส่งบทความ
-            alert('เปิดหน้าหลักเกณฑ์การส่งบทความ\n\nจะนำทางไปยัง: https://drive.google.com/file/d/11llERujw5ByMJKN0-e6a4-0XiccCnqRH/view');
+            alert('เปิดหน้าหลักเกณฑ์การส่งบทความ\n\nจะนำทางไปยัง: /criteria.html');
             // window.open('/criteria.html', '_blank');
         }
 
         function downloadTemplate() {
             // ดาวน์โหลดแม่แบบเอกสาร
-            alert('เริ่มดาวน์โหลดแม่แบบเอกสาร\n\nไฟล์: https://docs.google.com/document/d/1jecc07eGOYl-sPcWT0N-WDW7mnpEdTfj/edit');
+            alert('เริ่มดาวน์โหลดแม่แบบเอกสาร\n\nไฟล์: template_document.docx');
             // window.location.href = '/download/template_document.docx';
         }
         document.querySelectorAll('.download-btn').forEach(btn => {
