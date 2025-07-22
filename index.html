@@ -14,6 +14,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Sarabun', sans-serif;
         }
 
         body {
@@ -206,6 +207,7 @@
             border-radius: 12px;
             font-size: 12px;
             color: #495057;
+            font-family: 'Sarabun', sans-serif;
         }
 
         .abstract-row {
@@ -222,12 +224,14 @@
             line-height: 1.6;
             color: #495057;
             text-align: justify;
+            font-family: 'Sarabun', sans-serif;
         }
 
         .abstract-label {
             font-weight: 600;
             color: #2c3e50;
             margin-bottom: 10px;
+            font-family: 'Sarabun', sans-serif;
         }
 
         .expanded {
@@ -251,6 +255,7 @@
             <div class="menu-container">
                 <a href="#" class="menu-btn" onclick="openCriteria()">📋 หลักเกณฑ์การส่งบทความ</a>
                 <a href="#" class="menu-btn secondary" onclick="downloadTemplate()">📄 ดาวน์โหลดแม่แบบเอกสาร</a>
+                <a href="?page=admin" class="menu-btn secondary">🔧 จัดการข้อมูล</a>
             </div>
             
             <div class="search-container">
@@ -274,7 +279,7 @@
                         <th>ภาษา</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tableBody">
                     <tr class="row-highlight">
                         <td class="number-cell"><center>1</center></td>
                         <td>
@@ -371,8 +376,126 @@
     </div>
 
     <script>
+        // ตัวแปรสำหรับเก็บข้อมูล
+        let allData = [];
+        let filteredData = [];
+
+        // โหลดข้อมูลเมื่อเปิดหน้า
+        document.addEventListener('DOMContentLoaded', function() {
+            // พยายามโหลดข้อมูลจาก Google Sheets ก่อน
+            if (typeof google !== 'undefined' && google.script) {
+                loadDataFromGoogleSheets();
+            } else {
+                // ถ้าไม่มี Google Scripts ให้ใช้ข้อมูลที่มีอยู่แล้ว
+                console.log('ใช้ข้อมูลตัวอย่างในหน้า HTML');
+            }
+        });
+
+        // โหลดข้อมูลจาก Google Sheets
+        function loadDataFromGoogleSheets() {
+            google.script.run
+                .withSuccessHandler(function(data) {
+                    if (data && data.length > 0) {
+                        allData = data;
+                        filteredData = [...allData];
+                        renderDynamicTable();
+                    } else {
+                        console.log('ไม่มีข้อมูลจาก Google Sheets ใช้ข้อมูลที่มีอยู่');
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    console.error('Error loading data:', error);
+                    console.log('ใช้ข้อมูลที่มีอยู่ในหน้า HTML');
+                })
+                .getPublicData();
+        }
+
+        // แสดงตารางแบบ dynamic จากข้อมูล Google Sheets
+        function renderDynamicTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #6c757d;">ไม่มีข้อมูลผลงานวิชาการ</td></tr>';
+                return;
+            }
+
+            filteredData.forEach((item, index) => {
+                // แถวข้อมูลหลัก
+                const row = document.createElement('tr');
+                row.className = 'row-highlight';
+                row.innerHTML = `
+                    <td class="number-cell"><center>${index + 1}</center></td>
+                    <td>
+                        <button class="publication-type" onclick="toggleAbstract(this, 'abstract${item.id}')">+ ${item.type}</button>
+                    </td>
+                    <td class="date-cell">${formatDateThai(item.publishDate)}</td>
+                    <td class="date-cell">${item.number}</td>
+                    <td class="title-cell">${item.title}</td>
+                    <td class="author-cell">${item.author}</td>
+                    <td class="department-cell">${item.department}</td>
+                    <td>
+                        <a href="${item.downloadLink}" target="_blank" class="download-btn">Download</a>
+                    </td>
+                    <td>
+                        <span class="language-tag">${item.language}</span>
+                    </td>
+                `;
+                tbody.appendChild(row);
+
+                // แถวบทคัดย่อ
+                if (item.abstract && item.abstract.trim()) {
+                    const abstractRow = document.createElement('tr');
+                    abstractRow.id = `abstract${item.id}`;
+                    abstractRow.className = 'abstract-row';
+                    abstractRow.innerHTML = `
+                        <td colspan="9">
+                            <div class="abstract-content">
+                                <div class="abstract-label">บทคัดย่อ</div>
+                                <p>${formatAbstract(item.abstract)}</p>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(abstractRow);
+                }
+            });
+        }
+
+        // จัดรูปแบบวันที่เป็นภาษาไทย
+        function formatDateThai(dateString) {
+            if (!dateString) return '';
+            
+            const date = new Date(dateString);
+            const day = date.getDate();
+            const months = [
+                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+            ];
+            const month = months[date.getMonth()];
+            const year = (date.getFullYear() + 543).toString().slice(-2);
+            
+            return `${day}-${month}-${year}`;
+        }
+
+        // จัดรูปแบบบทคัดย่อ
+        function formatAbstract(abstract) {
+            if (!abstract) return '';
+            
+            // แปลง <br> และ <B> tags
+            return abstract
+                .replace(/<br><br>/g, '<br><br>')
+                .replace(/<B>/g, '<strong>')
+                .replace(/<\/B>/g, '</strong>')
+                .replace(/&nbsp;/g, ' ');
+        }
+
         function toggleAbstract(button, abstractId) {
             const abstractRow = document.getElementById(abstractId);
+            
+            if (!abstractRow) {
+                return;
+            }
+            
             const isExpanded = abstractRow.classList.contains('show');
             
             if (isExpanded) {
@@ -397,21 +520,40 @@
         // เพิ่มฟังก์ชันค้นหา
         document.querySelector('.search-input').addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase();
-            const rows = document.querySelectorAll('tbody tr:not(.abstract-row)');
             
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    row.style.display = '';
+            if (allData.length > 0) {
+                // ค้นหาในข้อมูลจาก Google Sheets
+                if (!searchTerm) {
+                    filteredData = [...allData];
                 } else {
-                    row.style.display = 'none';
-                    // ซ่อน abstract row ด้วยถ้าแถวหลักถูกซ่อน
-                    const nextRow = row.nextElementSibling;
-                    if (nextRow && nextRow.classList.contains('abstract-row')) {
-                        nextRow.style.display = 'none';
-                    }
+                    filteredData = allData.filter(item => 
+                        item.title.toLowerCase().includes(searchTerm) ||
+                        item.author.toLowerCase().includes(searchTerm) ||
+                        item.department.toLowerCase().includes(searchTerm) ||
+                        item.type.toLowerCase().includes(searchTerm) ||
+                        item.number.toLowerCase().includes(searchTerm) ||
+                        (item.abstract && item.abstract.toLowerCase().includes(searchTerm))
+                    );
                 }
-            });
+                renderDynamicTable();
+            } else {
+                // ค้นหาในข้อมูลแบบเดิม
+                const rows = document.querySelectorAll('tbody tr:not(.abstract-row)');
+                
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                        // ซ่อน abstract row ด้วยถ้าแถวหลักถูกซ่อน
+                        const nextRow = row.nextElementSibling;
+                        if (nextRow && nextRow.classList.contains('abstract-row')) {
+                            nextRow.style.display = 'none';
+                        }
+                    }
+                });
+            }
         });
 
         // ฟังก์ชันสำหรับปุ่มเมนู
@@ -424,6 +566,7 @@
             // ดาวน์โหลดแม่แบบเอกสาร
             window.open('https://docs.google.com/document/d/1jecc07eGOYl-sPcWT0N-WDW7mnpEdTfj/edit', '_blank');
         }
+
         document.querySelectorAll('.download-btn').forEach(btn => {
             btn.addEventListener('click', function() {
         //        alert('เริ่มดาวน์โหลดไฟล์...');
