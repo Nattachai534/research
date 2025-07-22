@@ -749,37 +749,31 @@
             }
         }
 
-        // วิธีหลัก: Redirect ไปหน้า Admin โดยตรง (ปรับปรุงใหม่)
+        // กำหนด URL ของ Google Apps Script (⚠️ เปลี่ยน URL นี้เป็น URL ที่ได้จาก Deploy)
+        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzEFJra5dIN83ozEu5Fhh4OzGANkeIVUb9ZbrZB3OHMr1NtybxSAEcwCN-fS62pVmVmHA/exec';
+
+        // วิธีหลัก: Redirect ไปหน้า Admin ใน Google Apps Script
         function redirectToAdmin() {
             const modal = document.querySelector('.password-modal-content');
             
             try {
-                // วิธีการสร้าง URL หลายแบบ
-                const currentUrl = window.location.href;
-                const baseUrl = currentUrl.split('?')[0];
+                // สร้าง URL สำหรับ Google Apps Script
+                let adminUrl;
                 
-                // ลองหลายวิธีสร้าง admin URL
-                const adminUrl1 = baseUrl + '?page=admin';
-                const adminUrl2 = window.location.origin + window.location.pathname + '?page=admin';
-                const adminUrl3 = currentUrl.replace(/(\?page=.*|$)/, '?page=admin');
-                
-                console.log('🔍 Redirect Debug:');
-                console.log('Current URL:', currentUrl);
-                console.log('Base URL:', baseUrl);
-                console.log('Admin URL 1:', adminUrl1);
-                console.log('Admin URL 2:', adminUrl2);
-                console.log('Admin URL 3:', adminUrl3);
-                console.log('Window location:', window.location);
-                
-                // เลือก URL ที่ดีที่สุด
-                let finalAdminUrl;
-                if (window.location.origin && window.location.pathname) {
-                    finalAdminUrl = window.location.origin + window.location.pathname + '?page=admin';
+                if (GOOGLE_APPS_SCRIPT_URL && GOOGLE_APPS_SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                    // ใช้ Google Apps Script URL
+                    adminUrl = GOOGLE_APPS_SCRIPT_URL + '?page=admin';
+                    console.log('🔗 Using Google Apps Script URL:', adminUrl);
                 } else {
-                    finalAdminUrl = adminUrl1;
+                    // Fallback: ใช้ current URL (สำหรับทดสอบ)
+                    const currentUrl = window.location.href;
+                    const baseUrl = currentUrl.split('?')[0];
+                    adminUrl = baseUrl + '?page=admin';
+                    console.log('⚠️ Using fallback URL:', adminUrl);
+                    console.log('⚠️ กรุณาตั้งค่า GOOGLE_APPS_SCRIPT_URL ให้ถูกต้อง!');
                 }
                 
-                console.log('🎯 Final Admin URL:', finalAdminUrl);
+                console.log('🎯 Final Admin URL:', adminUrl);
                 
                 // แสดง Loading
                 modal.innerHTML = `
@@ -787,45 +781,51 @@
                     <div style="margin: 30px 0; text-align: center;">
                         <div style="border: 4px solid #f3f3f3; border-top: 4px solid #28a745; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
                     </div>
-                    <p style="text-align: center; color: #6c757d; font-size: 13px; margin: 10px 0;">URL: ${finalAdminUrl}</p>
-                    <p style="text-align: center; color: #6c757d; font-size: 12px;">หากไม่เปลี่ยนหน้าภายใน 5 วินาที กรุณาลองวิธีอื่น</p>
+                    <p style="text-align: center; color: #6c757d; font-size: 13px; margin: 10px 0;">URL: ${adminUrl}</p>
+                    <p style="text-align: center; color: #6c757d; font-size: 12px;">กำลังเปลี่ยนไปยัง Google Apps Script...</p>
+                    
+                    ${GOOGLE_APPS_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE' ? 
+                        '<div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; padding: 10px; margin: 15px 0; font-size: 12px; color: #856404;"><strong>⚠️ คำเตือน:</strong> กรุณาตั้งค่า GOOGLE_APPS_SCRIPT_URL ในโค้ด!</div>' : ''
+                    }
                     
                     <div style="margin-top: 20px; text-align: center;">
-                        <button onclick="showManualUrl()" style="background: #17a2b8; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-family: 'Sarabun', sans-serif; font-size: 12px;">📋 ลองคัดลอก URL</button>
+                        <button onclick="showManualUrl()" style="background: #17a2b8; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-family: 'Sarabun', sans-serif; font-size: 12px;">📋 ดู URL</button>
                     </div>
                 `;
                 
                 // เปลี่ยนหน้าหลังจาก delay เล็กน้อย
                 setTimeout(() => {
-                    console.log('🚀 Redirecting to:', finalAdminUrl);
-                    window.location.href = finalAdminUrl;
+                    console.log('🚀 Redirecting to Google Apps Script:', adminUrl);
+                    window.location.href = adminUrl;
                 }, 2000);
                 
-                // Timeout fallback - หากไม่เปลี่ยนหน้าภายใน 8 วินาที
+                // Timeout fallback
                 setTimeout(() => {
-                    if (window.location.href === currentUrl) {
-                        console.log('❌ Redirect failed, showing manual options');
+                    if (window.location.href.includes('github.io')) {
+                        console.log('❌ Still on GitHub, redirect may have failed');
                         
                         modal.innerHTML = `
-                            <h3 style="color: #dc3545;">⚠️ ไม่สามารถเปลี่ยนหน้าอัตโนมัติได้</h3>
-                            <p style="margin: 15px 0; color: #6c757d; font-size: 14px;">กรุณาลองวิธีอื่น:</p>
+                            <h3 style="color: #dc3545;">⚠️ ต้องตั้งค่า Google Apps Script URL</h3>
+                            <p style="margin: 15px 0; color: #6c757d; font-size: 14px;">กรุณาทำตามขั้นตอนด้านล่าง:</p>
+                            
+                            <div style="background: #e7f3ff; border-left: 4px solid #007bff; padding: 15px; margin: 15px 0; border-radius: 4px; text-align: left;">
+                                <h4 style="color: #0056b3; margin-bottom: 10px; font-size: 14px;">📝 ขั้นตอนการตั้งค่า:</h4>
+                                <ol style="margin: 0; padding-left: 20px; color: #0056b3; font-size: 12px; line-height: 1.6;">
+                                    <li>Deploy Google Apps Script เป็น Web App</li>
+                                    <li>คัดลอก URL ที่ได้</li>
+                                    <li>แก้ไขในโค้ด: <code style="background: #f1f1f1; padding: 2px 4px; border-radius: 3px;">GOOGLE_APPS_SCRIPT_URL = 'URL_ของคุณ'</code></li>
+                                    <li>Upload ไฟล์ใหม่ไปยัง GitHub</li>
+                                </ol>
+                            </div>
                             
                             <div style="margin: 20px 0;">
-                                <button onclick="forceRedirect('${finalAdminUrl}')" style="width: 100%; margin: 5px 0; background: #ffc107; color: #212529; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-family: 'Sarabun', sans-serif; font-weight: 600;">
-                                    🔄 ลองอีกครั้ง (Force)
-                                </button>
-                                
-                                <button onclick="openInNewTab()" style="width: 100%; margin: 5px 0; background: #007bff; color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-family: 'Sarabun', sans-serif;">
-                                    🚀 เปิดในแท็บใหม่
-                                </button>
-                                
-                                <button onclick="showManualUrl()" style="width: 100%; margin: 5px 0; background: #17a2b8; color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-family: 'Sarabun', sans-serif;">
-                                    📋 คัดลอก URL
+                                <button onclick="showManualUrl()" style="width: 100%; background: #17a2b8; color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-family: 'Sarabun', sans-serif;">
+                                    📋 ดู URL ปัจจุบัน
                                 </button>
                             </div>
                             
-                            <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; padding: 10px; margin: 15px 0; font-size: 12px; color: #856404;">
-                                <strong>💡 เคล็ดลับ:</strong> อาจเป็นปัญหาของ Google Apps Script กรุณาลองรีเฟรชหน้าเว็บแล้วลองใหม่
+                            <div style="margin-top: 20px; text-align: center;">
+                                <button onclick="closePasswordModal()" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-family: 'Sarabun', sans-serif;">ปิด</button>
                             </div>
                         `;
                     }
@@ -942,11 +942,22 @@
             }
         }
 
-        // แสดง URL สำหรับคัดลอกด้วยตนเอง
+        // แสดง URL สำหรับคัดลอกด้วยตนเอง (อัปเดตใหม่)
         function showManualUrl() {
-            const currentUrl = window.location.href;
-            const baseUrl = currentUrl.split('?')[0];
-            const adminUrl = baseUrl + '?page=admin';
+            let adminUrl;
+            let urlNote = '';
+            
+            if (GOOGLE_APPS_SCRIPT_URL && GOOGLE_APPS_SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                // ใช้ Google Apps Script URL
+                adminUrl = GOOGLE_APPS_SCRIPT_URL + '?page=admin';
+                urlNote = '✅ Google Apps Script URL';
+            } else {
+                // Fallback URL
+                const currentUrl = window.location.href;
+                const baseUrl = currentUrl.split('?')[0];
+                adminUrl = baseUrl + '?page=admin';
+                urlNote = '⚠️ GitHub URL (ใช้ไม่ได้ เพราะไม่มี admin.html)';
+            }
             
             const modal = document.querySelector('.password-modal-content');
             modal.innerHTML = `
@@ -956,23 +967,40 @@
                     <label style="font-weight: 600; color: #495057; display: block; margin-bottom: 8px; font-size: 14px;">URL สำหรับคัดลอก:</label>
                     <div style="position: relative;">
                         <input type="text" id="adminUrlInput" value="${adminUrl}" readonly 
-                               style="width: 100%; padding: 12px; border: 2px solid #17a2b8; border-radius: 4px; font-family: monospace; font-size: 12px; background: #f8f9fa; padding-right: 80px;">
+                               style="width: 100%; padding: 12px; border: 2px solid #17a2b8; border-radius: 4px; font-family: monospace; font-size: 11px; background: #f8f9fa; padding-right: 80px;">
                         <button onclick="copyAdminUrl()" 
                                 style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: 11px; font-family: 'Sarabun', sans-serif;">
                             📋 คัดลอก
                         </button>
                     </div>
+                    <p style="font-size: 12px; color: #6c757d; margin-top: 5px;">${urlNote}</p>
                 </div>
                 
-                <div style="background: #e7f3ff; border-left: 4px solid #17a2b8; padding: 15px; margin: 20px 0; border-radius: 4px;">
-                    <div style="font-weight: 600; color: #0c5460; margin-bottom: 8px; font-size: 14px;">🎯 วิธีใช้:</div>
-                    <ol style="margin: 0; padding-left: 20px; color: #0c5460; font-size: 13px;">
-                        <li>คลิกปุ่ม "📋 คัดลอก" ด้านบน</li>
-                        <li>เปิดแท็บใหม่ (Ctrl+T หรือ Cmd+T)</li>
-                        <li>วาง URL ในแถบที่อยู่ (Ctrl+V หรือ Cmd+V)</li>
-                        <li>กด Enter เพื่อเข้าสู่หน้าจัดการข้อมูล</li>
-                    </ol>
-                </div>
+                ${GOOGLE_APPS_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE' ? `
+                    <div style="background: #f8d7da; border-left: 4px solid #dc3545; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                        <h4 style="color: #721c24; margin-bottom: 10px; font-size: 14px;">⚠️ ต้องตั้งค่า Google Apps Script URL</h4>
+                        <div style="color: #721c24; font-size: 12px; line-height: 1.6;">
+                            <p style="margin-bottom: 10px;"><strong>ขั้นตอน:</strong></p>
+                            <ol style="margin: 0; padding-left: 20px;">
+                                <li>ไปที่ <a href="https://script.google.com" target="_blank" style="color: #0056b3;">Google Apps Script</a></li>
+                                <li>เปิดโปรเจค Code.gs ที่มี admin.html</li>
+                                <li>Deploy → New deployment → Web app</li>
+                                <li>คัดลอก URL ที่ได้</li>
+                                <li>แก้ไข GOOGLE_APPS_SCRIPT_URL ในโค้ด</li>
+                            </ol>
+                        </div>
+                    </div>
+                ` : `
+                    <div style="background: #e7f3ff; border-left: 4px solid #17a2b8; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                        <div style="font-weight: 600; color: #0c5460; margin-bottom: 8px; font-size: 14px;">🎯 วิธีใช้:</div>
+                        <ol style="margin: 0; padding-left: 20px; color: #0c5460; font-size: 13px;">
+                            <li>คลิกปุ่ม "📋 คัดลอก" ด้านบน</li>
+                            <li>เปิดแท็บใหม่ (Ctrl+T หรือ Cmd+T)</li>
+                            <li>วาง URL ในแถบที่อยู่ (Ctrl+V หรือ Cmd+V)</li>
+                            <li>กด Enter เพื่อเข้าสู่หน้าจัดการข้อมูล</li>
+                        </ol>
+                    </div>
+                `}
                 
                 <div style="margin-top: 25px; text-align: center;">
                     <button onclick="goBackToPassword()" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-family: 'Sarabun', sans-serif; margin-right: 10px;">← กลับ</button>
