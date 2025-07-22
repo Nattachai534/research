@@ -481,9 +481,6 @@
                 <button class="password-btn confirm" onclick="checkPassword()">เข้าสู่ระบบ</button>
                 <button class="password-btn cancel" onclick="closePasswordModal()">ยกเลิก</button>
             </div>
-            <div style="margin-top: 15px;">
-                <button class="password-btn" style="background: #17a2b8; font-size: 12px; padding: 8px 16px;" onclick="showBackupLinkDirect()">📱 ลิงก์สำรอง</button>
-            </div>
         </div>
     </div>
 
@@ -641,9 +638,19 @@
 
         // ฟังก์ชันเปิด Admin Panel พร้อมระบบ Password
         function openAdminPanel() {
+            // รีเซ็ต modal ก่อนเปิด
+            closePasswordModal();
+            
+            // เปิด modal
             document.getElementById('passwordModal').style.display = 'block';
-            document.getElementById('passwordInput').focus();
-            document.getElementById('passwordError').style.display = 'none';
+            
+            // Focus ที่ช่องรหัสผ่าน
+            setTimeout(() => {
+                const passwordInput = document.getElementById('passwordInput');
+                if (passwordInput) {
+                    passwordInput.focus();
+                }
+            }, 100);
         }
 
         // ฟังก์ชันปิด Password Modal
@@ -651,52 +658,31 @@
             document.getElementById('passwordModal').style.display = 'none';
             document.getElementById('passwordInput').value = '';
             document.getElementById('passwordError').style.display = 'none';
-        }
-
-        // ฟังก์ชันเปิด Admin แบบตรง (สำรอง)
-        function openAdminDirect() {
-            const inputPassword = document.getElementById('passwordInput').value;
             
-            if (inputPassword !== ADMIN_PASSWORD) {
-                alert('กรุณาใส่รหัสผ่านก่อนใช้ลิงก์สำรอง');
-                document.getElementById('passwordInput').focus();
-                return;
-            }
-            
-            // แสดงลิงก์ให้ user คลิกเอง
-            const currentUrl = window.location.href;
-            const baseUrl = currentUrl.split('?')[0];
-            const adminUrl = baseUrl + '?page=admin';
-            
-            const linkHtml = `
-                <div style="text-align: center; padding: 20px;">
-                    <p style="margin-bottom: 15px;">คลิกลิงก์ด้านล่างเพื่อเข้าสู่ระบบจัดการ:</p>
-                    <a href="${adminUrl}" target="_blank" style="
-                        background: #dc3545; 
-                        color: white; 
-                        padding: 12px 20px; 
-                        text-decoration: none; 
-                        border-radius: 4px; 
-                        font-family: 'Sarabun', sans-serif;
-                        display: inline-block;
-                        font-weight: 500;
-                    ">🔧 เข้าระบบจัดการ</a>
-                    <p style="margin-top: 15px; font-size: 12px; color: #6c757d;">
-                        หากยังไม่ได้ ให้คัดลอกลิงก์: <br>
-                        <input type="text" value="${adminUrl}" onclick="this.select()" readonly style="
-                            width: 100%; 
-                            padding: 8px; 
-                            margin-top: 5px; 
-                            border: 1px solid #ddd; 
-                            border-radius: 4px;
-                            font-size: 11px;
-                        ">
-                    </p>
+            // รีเซ็ต modal content กลับเป็นรูปแบบเดิม
+            const modalContent = document.querySelector('.password-modal-content');
+            modalContent.innerHTML = `
+                <h3>🔐 ระบบจัดการข้อมูล</h3>
+                <p style="margin-bottom: 20px; color: #6c757d;">กรุณาใส่รหัสผ่านเพื่อเข้าสู่ระบบจัดการข้อมูล</p>
+                <input type="password" id="passwordInput" class="password-input" placeholder="รหัสผ่าน" maxlength="50">
+                <div class="password-error" id="passwordError">รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</div>
+                <div class="password-buttons">
+                    <button class="password-btn confirm" onclick="checkPassword()">เข้าสู่ระบบ</button>
+                    <button class="password-btn cancel" onclick="closePasswordModal()">ยกเลิก</button>
                 </div>
             `;
             
-            // แสดงใน modal ปัจจุบัน
-            document.querySelector('.password-modal-content').innerHTML = linkHtml;
+            // เพิ่ม event listener สำหรับ Enter key ใหม่
+            setTimeout(() => {
+                const passwordInput = document.getElementById('passwordInput');
+                if (passwordInput) {
+                    passwordInput.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') {
+                            checkPassword();
+                        }
+                    });
+                }
+            }, 100);
         }
 
         // ฟังก์ชันตรวจสอบรหัสผ่าน
@@ -705,66 +691,63 @@
             
             if (inputPassword === ADMIN_PASSWORD) {
                 // รหัสผ่านถูกต้อง - เปิดหน้าจัดการ
-                closePasswordModal();
                 
-                // แสดงข้อความกำลังโหลด
-                const loadingMsg = document.createElement('div');
-                loadingMsg.innerHTML = '🔄 กำลังเปิดระบบจัดการ...';
-                loadingMsg.style.cssText = `
-                    position: fixed; top: 50%; left: 50%; 
-                    transform: translate(-50%, -50%); 
-                    background: white; padding: 20px; 
-                    border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-                    z-index: 10000; font-family: 'Sarabun', sans-serif;
-                    text-align: center; color: #007bff;
+                // แสดงข้อความกำลังเปิดหน้า Admin
+                const modal = document.querySelector('.password-modal-content');
+                modal.innerHTML = `
+                    <h3 style="color: #28a745;">✅ รหัสผ่านถูกต้อง</h3>
+                    <p style="margin: 20px 0; color: #6c757d;">กำลังเปิดหน้าจัดการข้อมูล...</p>
+                    <div style="margin: 20px 0;">
+                        <div style="border: 4px solid #f3f3f3; border-top: 4px solid #28a745; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                    </div>
                 `;
-                document.body.appendChild(loadingMsg);
                 
+                // รอ 1 วินาทีแล้วเปิดหน้า Admin
                 setTimeout(() => {
                     try {
-                        // วิธีที่ 1: ใช้ URL เต็มในการเปิดหน้า admin
+                        // วิธีที่ 1: ใช้ URL สมบูรณ์
                         const currentUrl = window.location.href;
-                        const baseUrl = currentUrl.split('?')[0]; // ตัด parameter ออก
+                        const baseUrl = currentUrl.split('?')[0];
                         const adminUrl = baseUrl + '?page=admin';
                         
                         console.log('Current URL:', currentUrl);
                         console.log('Admin URL:', adminUrl);
                         
-                        // พยายามเปิดหน้าใหม่
-                        const newWindow = window.open(adminUrl, '_blank', 'width=1200,height=800');
+                        // ลองเปิดหน้า Admin
+                        const newWindow = window.open(adminUrl, '_blank');
                         
                         // ตรวจสอบว่าเปิดสำเร็จหรือไม่
                         setTimeout(() => {
-                            document.body.removeChild(loadingMsg);
-                            
                             if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-                                // แสดง popup สำรอง
-                                if (confirm('🚫 เบราว์เซอร์บล็อก popup!\n\nต้องการไปหน้าจัดการในแท็บเดิมหรือไม่?\n\n✅ ตกลง = ไปหน้าจัดการ\n❌ ยกเลิก = ใช้ลิงก์สำรอง')) {
-                                    window.location.href = adminUrl;
-                                } else {
-                                    // เปิด modal อีกครั้งพร้อมลิงก์สำรอง
-                                    showBackupLink(adminUrl);
-                                }
+                                // ถ้าเปิดไม่สำเร็จ ให้แสดง URL สำหรับ copy
+                                modal.innerHTML = `
+                                    <h3 style="color: #dc3545;">⚠️ ไม่สามารถเปิดหน้าใหม่ได้</h3>
+                                    <p style="margin: 15px 0; color: #6c757d; font-size: 14px;">กรุณาคัดลอก URL ด้านล่างและเปิดในแท็บใหม่:</p>
+                                    <div style="background: #f8f9fa; padding: 10px; border-radius: 4px; margin: 15px 0; word-break: break-all; font-family: monospace; font-size: 12px; border: 1px solid #dee2e6;">
+                                        ${adminUrl}
+                                    </div>
+                                    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                                        <button onclick="copyToClipboard('${adminUrl}')" style="background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-family: 'Sarabun', sans-serif;">📋 คัดลอก URL</button>
+                                        <button onclick="closePasswordModal()" style="background: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-family: 'Sarabun', sans-serif;">ปิด</button>
+                                    </div>
+                                `;
                             } else {
-                                // แสดงข้อความสำเร็จ
-                                const successMsg = document.createElement('div');
-                                successMsg.innerHTML = '✅ เปิดระบบจัดการสำเร็จ!';
-                                successMsg.style.cssText = loadingMsg.style.cssText.replace('#007bff', '#28a745');
-                                document.body.appendChild(successMsg);
-                                setTimeout(() => document.body.removeChild(successMsg), 2000);
+                                // เปิดสำเร็จ - ปิด modal
+                                setTimeout(() => {
+                                    closePasswordModal();
+                                }, 1000);
                             }
                         }, 1000);
                         
                     } catch (error) {
-                        document.body.removeChild(loadingMsg);
                         console.error('Error opening admin page:', error);
-                        
-                        // แสดงข้อความข้อผิดพลาดและลิงก์สำรอง
-                        const adminUrl = window.location.href.split('?')[0] + '?page=admin';
-                        alert('⚠️ เกิดข้อผิดพลาด: ' + error.message + '\n\nจะแสดงลิงก์สำรอง...');
-                        showBackupLink(adminUrl);
+                        modal.innerHTML = `
+                            <h3 style="color: #dc3545;">❌ เกิดข้อผิดพลาด</h3>
+                            <p style="margin: 15px 0; color: #6c757d;">กรุณาลองใหม่อีกครั้ง หรือติดต่อผู้ดูแลระบบ</p>
+                            <button onclick="closePasswordModal()" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-family: 'Sarabun', sans-serif;">ปิด</button>
+                        `;
                     }
-                }, 500);
+                }, 1000);
                 
             } else {
                 // รหัสผ่านผิด - แสดงข้อผิดพลาด
@@ -781,64 +764,33 @@
             }
         }
 
-        // ฟังก์ชันแสดงลิงก์สำรอง
-        function showBackupLink(adminUrl) {
-            document.getElementById('passwordModal').style.display = 'block';
-            document.querySelector('.password-modal-content').innerHTML = `
-                <h3>🔗 ลิงก์สำรอง</h3>
-                <p style="margin-bottom: 20px; color: #6c757d;">คลิกปุ่มด้านล่างเพื่อเข้าระบบจัดการ</p>
-                <a href="${adminUrl}" target="_blank" style="
-                    background: #dc3545; 
-                    color: white; 
-                    padding: 15px 25px; 
-                    text-decoration: none; 
-                    border-radius: 6px; 
-                    font-family: 'Sarabun', sans-serif;
-                    display: inline-block;
-                    font-weight: 500;
-                    font-size: 16px;
-                    margin-bottom: 15px;
-                ">🔧 เข้าระบบจัดการ</a>
-                <br>
-                <button onclick="copyToClipboard('${adminUrl}')" style="
-                    background: #6c757d; 
-                    color: white; 
-                    border: none;
-                    padding: 10px 20px; 
-                    border-radius: 4px; 
-                    font-family: 'Sarabun', sans-serif;
-                    cursor: pointer;
-                    margin-right: 10px;
-                ">📋 คัดลอกลิงก์</button>
-                <button onclick="closePasswordModal()" style="
-                    background: #6c757d; 
-                    color: white; 
-                    border: none;
-                    padding: 10px 20px; 
-                    border-radius: 4px; 
-                    font-family: 'Sarabun', sans-serif;
-                    cursor: pointer;
-                ">❌ ปิด</button>
-                <p style="margin-top: 15px; font-size: 12px; color: #6c757d;">
-                    หากยังไม่ได้ ให้คัดลอกลิงก์ไปวางที่ address bar
-                </p>
-            `;
+        // ฟังก์ชันคัดลอก URL
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('คัดลอก URL สำเร็จ!');
+                }).catch(() => {
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
         }
 
-        // ฟังก์ชันคัดลอกลิงก์
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('📋 คัดลอกลิงก์สำเร็จ! นำไปวางที่ address bar ของเบราว์เซอร์');
-            }).catch(() => {
-                // Fallback สำหรับเบราว์เซอร์เก่า
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                document.body.appendChild(textArea);
-                textArea.select();
+        // ฟังก์ชันสำรองสำหรับคัดลอก
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
                 document.execCommand('copy');
-                document.body.removeChild(textArea);
-                alert('📋 คัดลอกลิงก์สำเร็จ! นำไปวางที่ address bar ของเบราว์เซอร์');
-            });
+                alert('คัดลอก URL สำเร็จ!');
+            } catch (err) {
+                alert('ไม่สามารถคัดลอกได้ กรุณาคัดลอกด้วยตนเอง');
+            }
+            document.body.removeChild(textArea);
         }
 
         // เพิ่มฟังก์ชันค้นหา
