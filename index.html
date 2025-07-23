@@ -455,6 +455,12 @@
                 padding: 10px 8px;
             }
 
+            /* ปรับขนาดช่องภาษาในมือถือ */
+            .research-table td span {
+                font-size: 10px !important;
+                padding: 3px 8px !important;
+            }
+
             .admin-button {
                 position: static;
                 margin-top: 15px;
@@ -530,7 +536,7 @@
                         <th style="width: 200px;">ผู้นิพนธ์</th>
                         <th style="width: 150px;">แผนก</th>
                         <th style="width: 120px;">ดาวน์โหลด</th>
-                        <th style="width: 80px;">ภาษา</th>
+                        <th style="width: 90px;">ภาษา</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -816,7 +822,7 @@
                             }
                         </td>
                         <td style="text-align: center;">
-                            <span style="background: ${item.language === 'ไทย' ? '#e3f2fd' : '#fff3e0'}; color: ${item.language === 'ไทย' ? '#1976d2' : '#f57c00'}; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600;">
+                            <span style="background: ${item.language === 'ไทย' ? '#e3f2fd' : '#fff3e0'}; color: ${item.language === 'ไทย' ? '#1976d2' : '#f57c00'}; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; white-space: nowrap; display: inline-block;">
                                 ${item.language === 'ไทย' ? '🇹🇭 ไทย' : item.language === 'English' ? '🇺🇸 EN' : item.language || 'ไม่ระบุ'}
                             </span>
                         </td>
