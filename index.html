@@ -35,11 +35,16 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(rgba(102, 126, 234, 0.85), rgba(118, 75, 162, 0.85)), 
+                        url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover;
             color: white;
             padding: 40px;
             text-align: center;
             position: relative;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .header::before {
@@ -541,16 +546,30 @@
             loadDataFromGoogleSheets();
             
             // เพิ่ม event listener สำหรับกด Enter ในช่องรหัสผ่าน
-            document.getElementById('passwordInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    checkPassword();
-                }
-            });
+            const passwordInput = document.getElementById('passwordInput');
+            if (passwordInput) {
+                passwordInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkPassword();
+                    }
+                });
+            }
 
             // เพิ่ม event listener สำหรับกด Enter ในช่องค้นหา
-            document.getElementById('searchInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    performSearch();
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+            }
+
+            // ปิด modal เมื่อคลิกข้างนอก
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('passwordModal');
+                if (modal && event.target === modal) {
+                    closePasswordModal();
                 }
             });
         });
@@ -776,162 +795,213 @@
 
         // เปิด Modal รหัสผ่าน
         function openPasswordModal() {
-            document.getElementById('passwordModal').style.display = 'block';
-            document.getElementById('passwordInput').focus();
+            const modal = document.getElementById('passwordModal');
+            const passwordInput = document.getElementById('passwordInput');
+            
+            if (modal) {
+                modal.style.display = 'block';
+            }
+            if (passwordInput) {
+                passwordInput.focus();
+            }
         }
 
         // ปิด Modal รหัสผ่าน
         function closePasswordModal() {
-            document.getElementById('passwordModal').style.display = 'none';
-            document.getElementById('passwordInput').value = '';
+            const modal = document.getElementById('passwordModal');
+            const passwordInput = document.getElementById('passwordInput');
+            
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            if (passwordInput) {
+                passwordInput.value = '';
+            }
         }
 
         // ตรวจสอบรหัสผ่าน
         function checkPassword() {
-            const password = document.getElementById('passwordInput').value;
+            const passwordInput = document.getElementById('passwordInput');
+            if (!passwordInput) {
+                console.error('❌ Password input not found');
+                return;
+            }
+            
+            const password = passwordInput.value;
             const correctPassword = 'NattachaiOat25341799';
             
             if (password === correctPassword) {
-                redirectToAdmin();
+                // เข้าหน้า Admin ทันที
+                goToAdminPage();
             } else {
                 alert('รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่');
-                document.getElementById('passwordInput').value = '';
-                document.getElementById('passwordInput').focus();
+                passwordInput.value = '';
+                passwordInput.focus();
             }
         }
 
-        // วิธีหลัก: Redirect ไปหน้า Admin โดยตรง (ปรับปรุงใหม่)
-        function redirectToAdmin() {
-            const modal = document.querySelector('.password-modal-content');
+        // ฟังก์ชันไปหน้า Admin (ปรับปรุงใหม่ทั้งหมด)
+        function goToAdminPage() {
+            const adminUrl = GOOGLE_APPS_SCRIPT_URL + '?page=admin';
             
-            try {
-                let adminUrl;
-                let urlNote = '';
-                
-                if (GOOGLE_APPS_SCRIPT_URL && GOOGLE_APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbz_EXAMPLE_REPLACE_THIS_WITH_YOUR_SCRIPT_ID/exec') {
-                    // ใช้ Google Apps Script URL
-                    adminUrl = GOOGLE_APPS_SCRIPT_URL + '?page=admin';
-                    urlNote = '✅ Google Apps Script URL';
-                } else {
-                    // Fallback: ใช้ current URL (สำหรับทดสอบ)
-                    const currentUrl = window.location.href;
-                    const baseUrl = currentUrl.split('?')[0];
-                    adminUrl = baseUrl + '?page=admin';
-                    urlNote = '⚠️ GitHub URL (ใช้ไม่ได้ เพราะไม่มี admin.html)';
-                }
-                
-                console.log('🎯 Final Admin URL:', adminUrl);
-                
-                // แสดง Loading
-                modal.innerHTML = '<h3 style="color: #28a745;">🔗 กำลังไปหน้าจัดการข้อมูล...</h3>' +
-                    '<div style="margin: 30px 0; text-align: center;">' +
-                        '<div class="loading-spinner"></div>' +
+            console.log('🚀 Going to admin page:', adminUrl);
+            
+            const modal = document.querySelector('.password-modal-content');
+            if (modal) {
+                modal.innerHTML = '<div style="text-align: center; padding: 20px;">' +
+                    '<h3 style="color: #28a745; margin-bottom: 20px;">🔗 กำลังเปิดหน้าจัดการข้อมูล...</h3>' +
+                    '<div class="loading-spinner" style="margin: 20px auto;"></div>' +
+                    '<p style="color: #6c757d; margin-bottom: 20px;">กำลังเปิดแท็บใหม่...</p>' +
+                    '<div>' +
+                        '<button onclick="forceOpenAdmin()" style="background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-family: \'Sarabun\', sans-serif; margin-right: 10px; font-weight: 600;">🚀 เปิดแท็บใหม่</button>' +
+                        '<button onclick="copyToClipboard(\'' + adminUrl + '\')" style="background: #17a2b8; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-family: \'Sarabun\', sans-serif; margin-right: 10px;">📋 คัดลอก URL</button>' +
+                        '<button onclick="closePasswordModal()" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-family: \'Sarabun\', sans-serif;">❌ ปิด</button>' +
                     '</div>' +
-                    '<p style="text-align: center; color: #6c757d; font-size: 13px; margin: 10px 0;">URL: ' + adminUrl + '</p>' +
-                    '<p style="text-align: center; color: #6c757d; font-size: 12px;">กำลังเปลี่ยนไปยัง Google Apps Script...</p>' +
-                    (GOOGLE_APPS_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbz_EXAMPLE_REPLACE_THIS_WITH_YOUR_SCRIPT_ID/exec' ? 
-                        '<div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; padding: 10px; margin: 15px 0; font-size: 12px; color: #856404;"><strong>⚠️ คำเตือน:</strong> กรุณาตั้งค่า GOOGLE_APPS_SCRIPT_URL ในโค้ด!</div>' : ''
-                    ) +
-                    '<div style="margin-top: 20px; text-align: center;">' +
-                        '<button onclick="showManualUrl()" style="background: #17a2b8; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-family: \'Sarabun\', sans-serif; font-size: 12px;">📋 ดู URL</button>' +
-                    '</div>';
+                    '<div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 4px; font-size: 12px; color: #6c757d; word-break: break-all;">' +
+                        '<strong>URL:</strong> ' + adminUrl +
+                    '</div>' +
+                '</div>';
+            }
+            
+            // ลองเปิดแท็บใหม่ทันที
+            setTimeout(() => {
+                openAdminInNewTab(adminUrl);
+            }, 500);
+        }
+
+        // ฟังก์ชันเปิดหน้า Admin ในแท็บใหม่
+        function openAdminInNewTab(adminUrl) {
+            try {
+                // วิธีที่ 1: สร้าง link element และคลิก
+                const link = document.createElement('a');
+                link.href = adminUrl;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.style.display = 'none';
+                document.body.appendChild(link);
                 
-                // เปลี่ยนหน้าหลังจาก delay เล็กน้อย
-                setTimeout(() => {
-                    console.log('🚀 Redirecting to Google Apps Script:', adminUrl);
-                    window.location.href = adminUrl;
-                }, 2000);
+                // จำลองการคลิก
+                const clickEvent = new MouseEvent('click', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: true
+                });
                 
-                // Timeout fallback
+                link.dispatchEvent(clickEvent);
+                document.body.removeChild(link);
+                
+                console.log('✅ Link click method executed');
+                
+                // วิธีที่ 2: window.open backup
                 setTimeout(() => {
-                    if (window.location.href.includes('github.io')) {
-                        console.log('❌ Still on GitHub, redirect may have failed');
-                        
-                        modal.innerHTML = '<h3 style="color: #dc3545;">⚠️ ต้องตั้งค่า Google Apps Script URL</h3>' +
-                            '<p style="margin: 15px 0; color: #6c757d; font-size: 14px;">กรุณาทำตามขั้นตอนด้านล่าง:</p>' +
-                            '<div style="background: #e7f3ff; border-left: 4px solid #007bff; padding: 15px; margin: 15px 0; border-radius: 4px; text-align: left;">' +
-                                '<h4 style="color: #0056b3; margin-bottom: 10px; font-size: 14px;">📝 ขั้นตอนการตั้งค่า:</h4>' +
-                                '<ol style="margin: 0; padding-left: 20px; color: #0056b3; font-size: 12px; line-height: 1.6;">' +
-                                    '<li>Deploy Google Apps Script เป็น Web App</li>' +
-                                    '<li>คัดลอก URL ที่ได้</li>' +
-                                    '<li>แก้ไขในโค้ด: <code style="background: #f1f1f1; padding: 2px 4px; border-radius: 3px;">GOOGLE_APPS_SCRIPT_URL = \'URL_ของคุณ\'</code></li>' +
-                                    '<li>Upload ไฟล์ใหม่ไปยัง GitHub</li>' +
-                                '</ol>' +
-                            '</div>' +
-                            '<div style="margin-top: 20px; text-align: center;">' +
-                                '<button onclick="closePasswordModal()" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-family: \'Sarabun\', sans-serif;">ปิด</button>' +
-                            '</div>';
+                    const newWindow = window.open(adminUrl, '_blank', 'noopener,noreferrer,width=1200,height=800,scrollbars=yes,resizable=yes');
+                    if (newWindow) {
+                        console.log('✅ window.open backup successful');
+                        newWindow.focus();
+                    } else {
+                        console.log('❌ window.open was blocked');
+                        showAdminUrlManually(adminUrl);
                     }
-                }, 8000);
+                }, 100);
                 
             } catch (error) {
-                console.error('❌ Redirect Error:', error);
-                showErrorMessage('เกิดข้อผิดพลาด: ' + error.message);
+                console.error('❌ Error opening admin page:', error);
+                showAdminUrlManually(adminUrl);
             }
         }
 
-        // แสดง URL สำหรับคัดลอกด้วยตนเอง
-        function showManualUrl() {
-            let adminUrl;
-            let urlNote = '';
-            
-            if (GOOGLE_APPS_SCRIPT_URL && GOOGLE_APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbz_EXAMPLE_REPLACE_THIS_WITH_YOUR_SCRIPT_ID/exec') {
-                // ใช้ Google Apps Script URL
-                adminUrl = GOOGLE_APPS_SCRIPT_URL + '?page=admin';
-                urlNote = '✅ Google Apps Script URL';
-            } else {
-                // Fallback URL
-                const currentUrl = window.location.href;
-                const baseUrl = currentUrl.split('?')[0];
-                adminUrl = baseUrl + '?page=admin';
-                urlNote = '⚠️ GitHub URL (ใช้ไม่ได้ เพราะไม่มี admin.html)';
-            }
-            
+        // แสดง URL ด้วยตนเองหากเปิดแท็บไม่ได้
+        function showAdminUrlManually(adminUrl) {
             const modal = document.querySelector('.password-modal-content');
-            modal.innerHTML = '<h3 style="color: #17a2b8;">📋 URL หน้าจัดการข้อมูล</h3>' +
-                '<div style="margin: 20px 0;">' +
-                    '<label style="font-weight: 600; color: #495057; display: block; margin-bottom: 8px; font-size: 14px;">URL สำหรับคัดลอก:</label>' +
-                    '<div style="position: relative;">' +
-                        '<input type="text" id="adminUrlInput" value="' + adminUrl + '" readonly ' +
-                               'style="width: 100%; padding: 12px; border: 2px solid #17a2b8; border-radius: 4px; font-family: monospace; font-size: 11px; background: #f8f9fa; padding-right: 80px;">' +
-                        '<button onclick="copyAdminUrl()" ' +
-                                'style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: #17a2b8; color: white; border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; font-size: 11px; font-family: \'Sarabun\', sans-serif;">' +
-                            '📋 คัดลอก' +
-                        '</button>' +
+            if (modal) {
+                modal.innerHTML = '<div style="text-align: center; padding: 20px;">' +
+                    '<h3 style="color: #ffc107; margin-bottom: 15px;">⚠️ กรุณาเปิดหน้า Admin ด้วยตนเอง</h3>' +
+                    '<p style="color: #6c757d; margin-bottom: 20px;">เบราว์เซอร์อาจบล็อกการเปิดแท็บใหม่</p>' +
+                    '<div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 6px;">' +
+                        '<p style="margin-bottom: 10px; font-weight: 600; color: #495057;">คัดลอก URL นี้และเปิดในแท็บใหม่:</p>' +
+                        '<input type="text" value="' + adminUrl + '" readonly style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-family: monospace; font-size: 12px; background: white;" onclick="this.select();">' +
                     '</div>' +
-                    '<p style="font-size: 12px; color: #6c757d; margin-top: 5px;">' + urlNote + '</p>' +
-                '</div>' +
-                '<div style="margin-top: 25px; text-align: center;">' +
-                    '<button onclick="goBackToPassword()" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-family: \'Sarabun\', sans-serif; margin-right: 10px;">← กลับ</button>' +
-                    '<button onclick="closePasswordModal()" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-family: \'Sarabun\', sans-serif;">ปิด</button>' +
+                    '<div style="margin-top: 20px;">' +
+                        '<button onclick="copyToClipboard(\'' + adminUrl + '\')" style="background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-family: \'Sarabun\', sans-serif; margin-right: 10px; font-weight: 600;">📋 คัดลอก URL</button>' +
+                        '<button onclick="openAdminInNewTab(\'' + adminUrl + '\')" style="background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-family: \'Sarabun\', sans-serif; margin-right: 10px;">🔄 ลองอีกครั้ง</button>' +
+                        '<button onclick="closePasswordModal()" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-family: \'Sarabun\', sans-serif;">ปิด</button>' +
+                    '</div>' +
+                    '<div style="margin-top: 15px; padding: 10px; background: #e7f3ff; border-left: 4px solid #007bff; border-radius: 4px; text-align: left;">' +
+                        '<p style="margin: 0; font-size: 12px; color: #0056b3;"><strong>💡 เคล็ดลับ:</strong></p>' +
+                        '<ul style="margin: 5px 0 0 20px; font-size: 12px; color: #0056b3;">' +
+                            '<li>กด Ctrl+T (หรือ Cmd+T) เปิดแท็บใหม่</li>' +
+                            '<li>วาง URL ในแถบที่อยู่</li>' +
+                            '<li>กด Enter</li>' +
+                        '</ul>' +
+                    '</div>' +
                 '</div>';
+            }
         }
 
-        // คัดลอก URL
-        function copyAdminUrl() {
-            const input = document.getElementById('adminUrlInput');
-            input.select();
-            document.execCommand('copy');
-            
-            const button = input.nextElementSibling;
-            const originalText = button.textContent;
-            button.textContent = '✅ คัดลอกแล้ว';
-            
-            setTimeout(() => {
-                button.textContent = originalText;
-            }, 2000);
+        // ฟังก์ชันสำหรับบังคับเปิดหน้า Admin (ปรับปรุงใหม่)
+        function forceOpenAdmin() {
+            const adminUrl = GOOGLE_APPS_SCRIPT_URL + '?page=admin';
+            console.log('🚀 Force opening admin page:', adminUrl);
+            openAdminInNewTab(adminUrl);
         }
 
         // กลับไปหน้ากรอกรหัสผ่าน
         function goBackToPassword() {
             const modal = document.querySelector('.password-modal-content');
-            modal.innerHTML = '<h3>🔐 เข้าสู่ระบบจัดการข้อมูล</h3>' +
-                '<input type="password" class="password-input" id="passwordInput" placeholder="กรุณากรอกรหัสผ่าน">' +
-                '<div class="modal-buttons">' +
-                    '<button class="modal-btn btn-primary" onclick="checkPassword()">🔗 ไปหน้าจัดการข้อมูล (แนะนำ)</button>' +
-                    '<button class="modal-btn btn-secondary" onclick="closePasswordModal()">❌ ยกเลิก</button>' +
-                '</div>';
-            document.getElementById('passwordInput').focus();
+            if (modal) {
+                modal.innerHTML = '<h3>🔐 เข้าสู่ระบบจัดการข้อมูล</h3>' +
+                    '<input type="password" class="password-input" id="passwordInput" placeholder="กรุณากรอกรหัสผ่าน">' +
+                    '<div class="modal-buttons">' +
+                        '<button class="modal-btn btn-primary" onclick="checkPassword()">🔗 ไปหน้าจัดการข้อมูล</button>' +
+                        '<button class="modal-btn btn-secondary" onclick="closePasswordModal()">❌ ยกเลิก</button>' +
+                    '</div>';
+                const passwordInput = document.getElementById('passwordInput');
+                if (passwordInput) {
+                    passwordInput.focus();
+                    // เพิ่ม event listener สำหรับกด Enter
+                    passwordInput.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') {
+                            checkPassword();
+                        }
+                    });
+                }
+            }
+        }
+
+        // ฟังก์ชันคัดลอกไปยัง clipboard
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(function() {
+                    console.log('✅ Copied to clipboard:', text);
+                    alert('คัดลอก URL สำเร็จ!');
+                }).catch(function(err) {
+                    console.error('❌ Copy failed:', err);
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        // Fallback method สำหรับการคัดลอก
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                console.log('✅ Fallback copy successful');
+                alert('คัดลอก URL สำเร็จ!');
+            } catch (err) {
+                console.error('❌ Fallback copy failed:', err);
+                alert('ไม่สามารถคัดลอกได้ กรุณาคัดลอกด้วยตนเอง: ' + text);
+            } finally {
+                document.body.removeChild(textArea);
+            }
         }
 
         // ปิด modal เมื่อคลิกข้างนอก
