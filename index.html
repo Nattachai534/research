@@ -260,33 +260,68 @@
         }
 
         .abstract-content {
-            padding: 20px;
+            padding: 25px;
             background: white;
-            border-radius: 8px;
-            margin: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            margin: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             border-left: 4px solid #667eea;
         }
 
         .abstract-title {
             font-weight: 600;
             color: #667eea;
-            margin-bottom: 10px;
-            font-size: 16px;
+            margin-bottom: 15px;
+            font-size: 18px;
             display: flex;
             align-items: center;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
         }
 
         .abstract-title::before {
             content: "📄";
-            margin-right: 8px;
+            margin-right: 10px;
         }
 
         .abstract-text {
             color: #495057;
-            line-height: 1.6;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        /* สไตล์สำหรับหัวข้อย่อยในบทคัดย่อ */
+        .abstract-section {
+            margin-bottom: 20px;
+        }
+
+        .abstract-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 14px;
+            margin-bottom: 6px;
+            display: inline;
+        }
+
+        .section-content {
+            color: #495057;
+            line-height: 1.7;
             font-size: 14px;
             text-align: justify;
+            margin-left: 0;
+        }
+
+        .section-keywords {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-style: italic;
+            color: #6c757d;
+            border-left: 3px solid #667eea;
         }
 
         @keyframes slideDown {
@@ -521,6 +556,31 @@
                 max-width: 300px;
                 font-size: 13px;
                 padding: 12px 20px;
+            }
+
+            /* ปรับบทคัดย่อในมือถือ */
+            .abstract-content {
+                padding: 15px;
+                margin: 10px;
+            }
+
+            .abstract-title {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+
+            .section-title {
+                font-size: 13px;
+            }
+
+            .section-content {
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            .section-keywords {
+                font-size: 12px;
+                padding: 6px 10px;
             }
 
             .admin-button {
@@ -862,6 +922,75 @@
             }
         }
 
+        // ฟังก์ชันจัดรูปแบบบทคัดย่อให้เป็นหัวข้อย่อย
+        function formatAbstractText(abstractText) {
+            if (!abstractText || abstractText.trim() === '') {
+                return '<em style="color: #6c757d;">ไม่มีบทคัดย่อ</em>';
+            }
+
+            // หัวข้อที่ต้องการจัดรูปแบบ
+            const sectionHeaders = [
+                'ภูมิหลัง',
+                'วัตถุประสงค์', 
+                'วิธีการ',
+                'วิธีดำเนินการ',
+                'ผลการศึกษา',
+                'ผล',
+                'สรุป',
+                'ข้อเสนอแนะ',
+                'สิ่งที่พบใหม่ในนิพนธ์ฉบับนี้',
+                'สิ่งที่พบใหม่',
+                'ประโยชน์ที่คาดว่าจะได้รับ',
+                'คำสำคัญ'
+            ];
+
+            let formattedText = abstractText;
+
+            // แทนที่หัวข้อแต่ละตัวด้วย HTML markup
+            sectionHeaders.forEach(header => {
+                // Pattern สำหรับหาหัวข้อ (รองรับทั้งมี : และไม่มี :)
+                const patterns = [
+                    new RegExp(`(^|\\n|\\s)(${header})\\s*[:：]\\s*`, 'gi'),
+                    new RegExp(`(^|\\n|\\s)(${header})\\s+`, 'gi')
+                ];
+
+                patterns.forEach(pattern => {
+                    formattedText = formattedText.replace(pattern, (match, prefix, headerText) => {
+                        // ถ้าเป็นคำสำคัญ ให้ใช้สไตล์พิเศษ
+                        if (headerText.includes('คำสำคัญ')) {
+                            return `${prefix}<div class="abstract-section"><span class="section-title">${headerText}:</span><br><div class="section-keywords">`;
+                        } else {
+                            return `${prefix}<div class="abstract-section"><span class="section-title">${headerText}:</span> <span class="section-content">`;
+                        }
+                    });
+                });
+            });
+
+            // ปิด tags ที่เปิดไว้
+            const openDivCount = (formattedText.match(/<div class="abstract-section">/g) || []).length;
+            const closeDivCount = (formattedText.match(/<\/div>/g) || []).length;
+            
+            if (openDivCount > closeDivCount) {
+                // ถ้ามี section ที่ยังไม่ปิด ให้ปิดให้หมด
+                for (let i = closeDivCount; i < openDivCount; i++) {
+                    formattedText += '</span></div>';
+                }
+            }
+
+            // ถ้าไม่มีหัวข้อใดๆ เลย ให้แสดงแบบเดิม
+            if (!formattedText.includes('<div class="abstract-section">')) {
+                return `<div class="section-content">${abstractText}</div>`;
+            }
+
+            // ปิด tag สำหรับคำสำคัญถ้ามี
+            if (formattedText.includes('section-keywords')) {
+                formattedText = formattedText.replace(/<div class="section-keywords">([^<]*?)(<div class="abstract-section">|$)/g, 
+                    '<div class="section-keywords">$1</div>$2');
+            }
+
+            return formattedText;
+        }
+
         // ฟังก์ชันจัดรูปแบบวันที่ให้เป็น "00-May-25"
         function formatDateDisplay(dateString) {
             if (!dateString) return 'ไม่ระบุ';
@@ -948,7 +1077,7 @@
                             <div class="abstract-content">
                                 <div class="abstract-title">บทคัดย่อ</div>
                                 <div class="abstract-text">
-                                    ${item.abstract ? item.abstract : '<em style="color: #6c757d;">ไม่มีบทคัดย่อ</em>'}
+                                    ${formatAbstractText(item.abstract)}
                                 </div>
                             </div>
                         </td>
