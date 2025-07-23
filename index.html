@@ -4,34 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เผยแพร่ผลงานวิชาการพยาบาล โรงพยาบาลราชวิถี</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Sarabun', sans-serif;
         }
 
         body {
             font-family: 'Sarabun', sans-serif;
-            line-height: 1.6;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            line-height: 1.6;
             min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
         }
 
         .header {
@@ -47,69 +33,78 @@
             justify-content: center;
         }
 
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%), 
-                        linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%), 
-                        linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.1) 75%), 
-                        linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.1) 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-            opacity: 0.3;
-        }
-
         .header-content {
-            position: relative;
             z-index: 2;
         }
 
         .header h1 {
-            font-size: 32px;
-            margin-bottom: 15px;
+            font-size: 2.5em;
             font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .header p {
-            font-size: 18px;
-            opacity: 0.95;
-            font-weight: 400;
+            font-size: 1.2em;
+            font-weight: 300;
+            opacity: 0.9;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
 
-        .main-content {
-            padding: 40px;
+        .admin-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Sarabun', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            z-index: 3;
         }
 
-        .controls {
+        .admin-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .search-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+        }
+
+        .search-row {
             display: flex;
-            justify-content: space-between;
+            gap: 15px;
             align-items: center;
-            margin-bottom: 30px;
-            gap: 20px;
             flex-wrap: wrap;
         }
 
-        .search-container {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex: 1;
-            max-width: 500px;
-        }
-
         .search-input {
-            flex: 1;
+            flex: 2;
+            min-width: 250px;
             padding: 12px 16px;
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
             font-family: 'Sarabun', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
         }
 
         .search-input:focus {
@@ -118,149 +113,218 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        .search-btn {
-            background: #667eea;
-            color: white;
-            border: none;
+        .filter-select {
             padding: 12px 16px;
-            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 14px;
+            background: white;
             cursor: pointer;
-            transition: background 0.3s;
-            font-size: 16px;
+            transition: all 0.3s ease;
         }
 
-        .search-btn:hover {
-            background: #5a67d8;
+        .filter-select:focus {
+            outline: none;
+            border-color: #667eea;
         }
 
-        .filter-container {
+        .search-buttons {
             display: flex;
             gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Sarabun', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 2px solid #dee2e6;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            transform: translateY(-1px);
+        }
+
+        .research-table {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-top: 30px;
+        }
+
+        .research-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            border: none;
+        }
+
+        .research-table td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: top;
+        }
+
+        .research-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .research-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* สไตล์สำหรับประเภทที่คลิกได้ */
+        .type-cell {
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .type-cell:hover {
+            background-color: #e3f2fd;
+        }
+
+        .type-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .type-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .type-button.expanded {
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        }
+
+        .expand-icon {
+            margin-left: 8px;
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .expand-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        /* แถวบทคัดย่อ */
+        .abstract-row {
+            display: none;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 4px solid #667eea;
+        }
+
+        .abstract-row.show {
+            display: table-row;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .abstract-content {
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            margin: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .abstract-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 16px;
+            display: flex;
             align-items: center;
         }
 
-        .filter-select {
-            padding: 8px 12px;
-            border: 2px solid #e1e5e9;
-            border-radius: 6px;
-            font-size: 14px;
-            background: white;
-            cursor: pointer;
-            font-family: 'Sarabun', sans-serif;
+        .abstract-title::before {
+            content: "📄";
+            margin-right: 8px;
         }
 
-        .admin-btn {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-            font-family: 'Sarabun', sans-serif;
-        }
-
-        .admin-btn:hover {
-            background: linear-gradient(135deg, #ee5a52, #ff6b6b);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-        }
-
-        .table-container {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
-            border: 1px solid #e1e5e9;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        th {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        .abstract-text {
             color: #495057;
-            padding: 16px 12px;
+            line-height: 1.6;
+            font-size: 14px;
+            text-align: justify;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
             text-align: center;
-            font-weight: 600;
-            border-bottom: 2px solid #dee2e6;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            padding: 25px;
+            margin-top: 40px;
         }
 
-        td {
-            padding: 14px 12px;
-            border-bottom: 1px solid #f1f3f4;
-            vertical-align: middle;
-        }
-
-        tr:hover {
-            background-color: rgba(102, 126, 234, 0.05);
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            text-align: center;
-            white-space: nowrap;
-        }
-
-        .research-case {
-            background: linear-gradient(135deg, #4fc3f7, #29b6f6);
-            color: white;
-        }
-
-        .research-original {
-            background: linear-gradient(135deg, #81c784, #66bb6a);
-            color: white;
-        }
-
-        .language-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 500;
-        }
-
-        .lang-th {
-            background: #e3f2fd;
-            color: #1976d2;
-        }
-
-        .lang-en {
-            background: #f3e5f5;
-            color: #7b1fa2;
-        }
-
-        .download-btn {
-            background: linear-gradient(135deg, #26a69a, #00897b);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 500;
-            transition: all 0.3s;
-            display: inline-block;
-        }
-
-        .download-btn:hover {
-            background: linear-gradient(135deg, #00897b, #26a69a);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(38, 166, 154, 0.3);
-        }
-
-        .password-modal {
+        /* Modal styles */
+        .modal {
             display: none;
             position: fixed;
             z-index: 1000;
@@ -268,47 +332,54 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.6);
+            background-color: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(5px);
         }
 
-        .password-modal-content {
-            background-color: white;
+        .modal-content {
+            background: white;
             margin: 10% auto;
-            padding: 30px;
+            padding: 0;
             border-radius: 15px;
             width: 90%;
-            max-width: 500px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            animation: modalSlideIn 0.3s ease;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
         }
 
         @keyframes modalSlideIn {
             from {
-                transform: translateY(-50px);
                 opacity: 0;
+                transform: translateY(-50px);
             }
             to {
-                transform: translateY(0);
                 opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        .password-modal h3 {
-            margin-bottom: 20px;
-            color: #333;
+        .password-modal-content {
+            padding: 30px;
             text-align: center;
-            font-size: 24px;
+        }
+
+        .password-modal-content h3 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 22px;
+            font-weight: 600;
         }
 
         .password-input {
             width: 100%;
-            padding: 15px;
-            margin: 15px 0;
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
-            font-size: 16px;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
             font-family: 'Sarabun', sans-serif;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
         }
 
         .password-input:focus {
@@ -321,477 +392,184 @@
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin-top: 25px;
+            flex-wrap: wrap;
         }
 
         .modal-btn {
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 25px;
             cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
             font-family: 'Sarabun', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 120px;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+        .modal-btn.btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
 
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #5a67d8, #6b46c1);
-            transform: translateY(-1px);
+        .modal-btn.btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
 
-        .btn-secondary {
+        .modal-btn.btn-secondary {
             background: #f8f9fa;
             color: #6c757d;
-            border: 1px solid #dee2e6;
+            border: 2px solid #dee2e6;
         }
 
-        .btn-secondary:hover {
+        .modal-btn.btn-secondary:hover {
             background: #e9ecef;
         }
 
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 24px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
-            border: 1px solid #e1e5e9;
-            transition: transform 0.3s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .stat-number {
-            font-size: 36px;
-            font-weight: 700;
-            color: #667eea;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .stat-label {
-            color: #6c757d;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #6c757d;
-        }
-
-        .empty-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-
-        .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .controls {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .search-row {
                 flex-direction: column;
                 align-items: stretch;
             }
-            
-            .search-container {
-                max-width: none;
+
+            .search-input, .filter-select {
+                min-width: auto;
             }
-            
-            .filter-container {
-                justify-content: center;
+
+            .research-table {
+                font-size: 13px;
             }
-            
-            .table-container {
-                overflow-x: auto;
+
+            .research-table th, .research-table td {
+                padding: 10px 8px;
             }
-            
-            table {
-                min-width: 800px;
+
+            .admin-button {
+                position: static;
+                margin-top: 15px;
+                align-self: center;
             }
-            
-            .password-modal-content {
-                margin: 20% auto;
+
+            .modal-content {
                 width: 95%;
+                margin: 5% auto;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <h1>🏥 เผยแพร่ผลงานวิชาการพยาบาล</h1>
+            <p>โรงพยาบาลราชวิถี กรุงเทพมหานคร</p>
+        </div>
+        <button class="admin-button" onclick="openPasswordModal()">🔐 จัดการข้อมูล</button>
+    </div>
+
+    <!-- Main Container -->
     <div class="container">
-        <div class="header">
-            <div class="header-content">
-                <h1>🏥 เผยแพร่ผลงานวิชาการพยาบาล</h1>
-                <p>โรงพยาบาลราชวิถี กรมการแพทย์</p>
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-row">
+                <input type="text" class="search-input" id="searchInput" placeholder="🔍 ค้นหาชื่อเรื่อง, ผู้นิพนธ์, แผนก หรือ บทคัดย่อ...">
+                
+                <select class="filter-select" id="typeFilter" onchange="filterData()">
+                    <option value="">ทุกประเภท</option>
+                </select>
+                
+                <select class="filter-select" id="yearFilter" onchange="filterData()">
+                    <option value="">ทุกปี</option>
+                </select>
+                
+                <div class="search-buttons">
+                    <button class="btn btn-primary" onclick="performSearch()">🔍 ค้นหา</button>
+                    <button class="btn btn-secondary" onclick="resetSearch()">🔄 รีเซ็ต</button>
+                </div>
             </div>
         </div>
 
-        <div class="main-content">
-            <div class="stats-container">
-                <div class="stat-card">
-                    <span class="stat-number" id="totalCount">0</span>
-                    <span class="stat-label">ผลงานทั้งหมด</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number" id="caseStudyCount">0</span>
-                    <span class="stat-label">กรณีศึกษา</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number" id="originalCount">0</span>
-                    <span class="stat-label">งานนิพนธ์ต้นฉบับ</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number" id="thisYearCount">0</span>
-                    <span class="stat-label">ปีนี้</span>
-                </div>
+        <!-- Instructions -->
+        <div style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%); border-radius: 10px; padding: 20px; margin-bottom: 25px; border-left: 4px solid #667eea;">
+            <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                <span style="font-size: 20px; margin-right: 10px;">💡</span>
+                <h3 style="margin: 0; color: #667eea; font-size: 16px;">คำแนะนำการใช้งาน</h3>
             </div>
+            <div style="color: #495057; font-size: 14px; line-height: 1.5;">
+                • <strong>คลิกที่ปุ่มประเภท</strong> (งานกรณีศึกษา/งานนิพนธ์ต้นฉบับ) <strong>เพื่อดูบทคัดย่อ</strong><br>
+                • ใช้ช่องค้นหาเพื่อค้นหาข้อมูลใน <em>ชื่อเรื่อง, ผู้นิพนธ์, แผนก หรือ บทคัดย่อ</em><br>
+                • เลือกประเภทและปีเพื่อกรองข้อมูลที่ต้องการ
+            </div>
+        </div>
 
-            <div class="controls">
-                <div class="search-container">
-                    <input type="text" class="search-input" id="searchInput" placeholder="ค้นหาผลงาน, ชื่อผู้นิพนธ์, แผนก...">
-                    <button class="search-btn" onclick="performSearch()">🔍 ค้นหา</button>
-                </div>
-                
-                <div class="filter-container">
-                    <select class="filter-select" id="typeFilter" onchange="applyFilters()">
-                        <option value="">ประเภททั้งหมด</option>
-                        <option value="กรณีศึกษา">กรณีศึกษา</option>
-                        <option value="งานนิพนธ์ต้นฉบับ">งานนิพนธ์ต้นฉบับ</option>
-                    </select>
-                    
-                    <select class="filter-select" id="languageFilter" onchange="applyFilters()">
-                        <option value="">ภาษาทั้งหมด</option>
-                        <option value="ไทย">ไทย</option>
-                        <option value="English">English</option>
-                    </select>
-                    
-                    <button class="admin-btn" onclick="openPasswordModal()">🔐 จัดการข้อมูล</button>
-                </div>
-            </div>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ลำดับ</th>
-                            <th>ประเภท</th>
-                            <th>วันที่เผยแพร่</th>
-                            <th>เลขที่</th>
-                            <th>เรื่อง</th>
-                            <th>ผู้นิพนธ์</th>
-                            <th>แผนก</th>
-                            <th>ภาษา</th>
-                            <th>ดาวน์โหลด</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <!-- ข้อมูลจะถูกโหลดจาก Google Apps Script อัตโนมัติ -->
-                    </tbody>
-                </table>
-            </div>
+        <!-- Research Table -->
+        <div style="overflow-x: auto;">
+            <table class="research-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">ลำดับ</th>
+                        <th style="width: 150px;">ประเภท</th>
+                        <th style="width: 110px;">วันที่เผยแพร่</th>
+                        <th style="width: 120px;">เลขที่</th>
+                        <th style="width: 300px;">เรื่อง</th>
+                        <th style="width: 200px;">ผู้นิพนธ์</th>
+                        <th style="width: 150px;">แผนก</th>
+                        <th style="width: 120px;">ดาวน์โหลด</th>
+                        <th style="width: 80px;">ภาษา</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 40px; color: #6c757d;">
+                            <div class="loading-spinner"></div>
+                            <p style="margin-top: 15px;">กำลังโหลดข้อมูล...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2024 โรงพยาบาลราชวิถี กรุงเทพมหานคร | ระบบจัดการผลงานวิชาการพยาบาล</p>
+    </div>
+
     <!-- Password Modal -->
-    <div id="passwordModal" class="password-modal">
-        <div class="password-modal-content">
-            <h3>🔐 เข้าสู่ระบบจัดการข้อมูล</h3>
-            <input type="password" class="password-input" id="passwordInput" placeholder="กรุณากรอกรหัสผ่าน">
-            <div class="modal-buttons">
-                <button class="modal-btn btn-primary" onclick="checkPassword()">🔗 ไปหน้าจัดการข้อมูล (แนะนำ)</button>
-                <button class="modal-btn btn-secondary" onclick="closePasswordModal()">❌ ยกเลิก</button>
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <div class="password-modal-content">
+                <h3>🔐 เข้าสู่ระบบจัดการข้อมูล</h3>
+                <input type="password" class="password-input" id="passwordInput" placeholder="กรุณากรอกรหัสผ่าน">
+                <div class="modal-buttons">
+                    <button class="modal-btn btn-primary" onclick="checkPassword()">🔗 ไปหน้าจัดการข้อมูล</button>
+                    <button class="modal-btn btn-secondary" onclick="closePasswordModal()">❌ ยกเลิก</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // กำหนด URL ของ Google Apps Script (⚠️ เปลี่ยน URL นี้เป็น URL ที่ได้จาก Deploy)
+        // ตั้งค่า URL ของ Google Apps Script
         const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwboJjP4faTGf7kbSCbPqZZVvgotLqvNo548YIEbrnkm2kXmCk-UJm0DX7uncU-kJzcfQ/exec';
 
-        // ตัวแปรสำหรับเก็บข้อมูล (เริ่มต้นจากข้อมูลว่าง)
-        let allData = [];
-        let filteredData = [];
-
-        // โหลดข้อมูลเมื่อเปิดหน้า
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Public page loaded, loading data from Google Apps Script...');
-            loadDataFromGoogleSheets();
-            
-            // เพิ่ม event listener สำหรับกด Enter ในช่องรหัสผ่าน
-            const passwordInput = document.getElementById('passwordInput');
-            if (passwordInput) {
-                passwordInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        checkPassword();
-                    }
-                });
-            }
-
-            // เพิ่ม event listener สำหรับกด Enter ในช่องค้นหา
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        performSearch();
-                    }
-                });
-            }
-
-            // ปิด modal เมื่อคลิกข้างนอก
-            window.addEventListener('click', function(event) {
-                const modal = document.getElementById('passwordModal');
-                if (modal && event.target === modal) {
-                    closePasswordModal();
-                }
-            });
-        });
-
-        // โหลดข้อมูลจาก Google Sheets (ปรับปรุงใหม่)
-        function loadDataFromGoogleSheets() {
-            if (GOOGLE_APPS_SCRIPT_URL && GOOGLE_APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbz_EXAMPLE_REPLACE_THIS_WITH_YOUR_SCRIPT_ID/exec') {
-                
-                console.log('🔍 Loading data from Google Apps Script:', GOOGLE_APPS_SCRIPT_URL);
-                
-                // แสดง loading indicator
-                const tbody = document.getElementById('tableBody');
-                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #6c757d;"><div class="loading-spinner"></div>กำลังโหลดข้อมูลจาก Google Apps Script...</td></tr>';
-                
-                // เรียก API ผ่าน fetch
-                fetch(GOOGLE_APPS_SCRIPT_URL + '?action=getPublicData')
-                    .then(response => {
-                        console.log('📡 Response status:', response.status);
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok: ' + response.status);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('📊 Data received:', data);
-                        
-                        if (data && Array.isArray(data)) {
-                            allData = data;
-                            filteredData = [...allData];
-                            renderDynamicTable();
-                            updateStats();
-                            console.log('✅ Data loaded successfully:', allData.length, 'items');
-                        } else if (data && data.success && Array.isArray(data.data)) {
-                            allData = data.data;
-                            filteredData = [...allData];
-                            renderDynamicTable();
-                            updateStats();
-                            console.log('✅ Data loaded successfully:', allData.length, 'items');
-                        } else {
-                            console.log('⚠️ No data or invalid format:', data);
-                            showNoDataMessage();
-                            updateStats();
-                        }
-                    })
-                    .catch(error => {
-                        console.error('❌ Error loading data from Google Apps Script:', error);
-                        console.log('📋 Showing empty state...');
-                        
-                        // แสดงข้อมูลตัวอย่างหากเรียก API ไม่ได้
-                        allData = [];
-                        filteredData = [];
-                        showConnectionError();
-                        updateStats();
-                    });
-            } else {
-                console.log('⚠️ Google Apps Script URL not configured, showing configuration message');
-                allData = [];
-                filteredData = [];
-                showConfigMessage();
-                updateStats();
-            }
-        }
-
-        // แสดงข้อความเมื่อไม่มีข้อมูล
-        function showNoDataMessage() {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '<tr><td colspan="9" class="empty-state">' +
-                '<div class="empty-icon">📄</div>' +
-                '<h3 style="color: #495057; margin-bottom: 10px;">ยังไม่มีข้อมูลผลงานวิชาการ</h3>' +
-                '<p>ข้อมูลจะแสดงขึ้นหลังจากเพิ่มผ่านระบบหลังบ้าน</p>' +
-                '</td></tr>';
-        }
-
-        // แสดงข้อความเมื่อเกิดข้อผิดพลาดในการเชื่อมต่อ
-        function showConnectionError() {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '<tr><td colspan="9" class="empty-state">' +
-                '<div class="empty-icon">⚠️</div>' +
-                '<h3 style="color: #dc3545; margin-bottom: 10px;">ไม่สามารถโหลดข้อมูลได้</h3>' +
-                '<p style="margin-bottom: 15px;">กรุณาตรวจสอบการเชื่อมต่อ Google Apps Script</p>' +
-                '<button onclick="loadDataFromGoogleSheets()" class="modal-btn btn-primary">🔄 ลองใหม่</button>' +
-                '</td></tr>';
-        }
-
-        // แสดงข้อความเมื่อยังไม่ได้ตั้งค่า URL
-        function showConfigMessage() {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '<tr><td colspan="9" class="empty-state">' +
-                '<div class="empty-icon">⚙️</div>' +
-                '<h3 style="color: #ffc107; margin-bottom: 10px;">ยังไม่ได้ตั้งค่า Google Apps Script URL</h3>' +
-                '<p style="margin-bottom: 10px;">กรุณาตั้งค่า GOOGLE_APPS_SCRIPT_URL ในโค้ด</p>' +
-                '<small style="color: #6c757d;">แล้วอัปโหลดไฟล์ใหม่ไปยัง GitHub</small>' +
-                '</td></tr>';
-        }
-
-        // แสดงตารางแบบไดนามิก (ปรับปรุงให้ handle ข้อมูลจริงจาก Google Apps Script)
-        function renderDynamicTable() {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
-
-            if (!filteredData || filteredData.length === 0) {
-                showNoDataMessage();
-                return;
-            }
-
-            filteredData.forEach((item, index) => {
-                // ตรวจสอบและป้องกัน undefined values
-                const safeItem = {
-                    id: item.id || (index + 1),
-                    type: item.type || 'ไม่ระบุ',
-                    publishDate: item.publishDate || '',
-                    number: item.number || '',
-                    title: item.title || 'ไม่มีหัวข้อ',
-                    author: item.author || 'ไม่ระบุผู้นิพนธ์',
-                    department: item.department || 'ไม่ระบุแผนก',
-                    language: item.language || 'ไม่ระบุ',
-                    downloadLink: item.downloadLink || '#'
-                };
-
-                const row = document.createElement('tr');
-                row.innerHTML = '<td style="text-align: center; font-weight: 600;">' + safeItem.id + '</td>' +
-                    '<td style="text-align: center;">' +
-                        '<span class="badge ' + (safeItem.type === 'กรณีศึกษา' ? 'research-case' : 'research-original') + '">' +
-                            safeItem.type +
-                        '</span>' +
-                    '</td>' +
-                    '<td style="text-align: center;">' + formatDisplayDate(safeItem.publishDate) + '</td>' +
-                    '<td style="text-align: center; font-family: monospace;">' + safeItem.number + '</td>' +
-                    '<td style="text-align: left; font-weight: 500;">' + safeItem.title + '</td>' +
-                    '<td style="text-align: left;">' + safeItem.author + '</td>' +
-                    '<td style="text-align: center;">' + safeItem.department + '</td>' +
-                    '<td style="text-align: center;">' +
-                        '<span class="language-badge ' + (safeItem.language === 'English' ? 'lang-en' : 'lang-th') + '">' +
-                            safeItem.language +
-                        '</span>' +
-                    '</td>' +
-                    '<td style="text-align: center;">' +
-                        (safeItem.downloadLink && safeItem.downloadLink !== '#' ? 
-                            '<a href="' + safeItem.downloadLink + '" target="_blank" class="download-btn">📥 ดาวน์โหลด</a>' :
-                            '<span style="color: #6c757d; font-size: 12px;">ไม่มีลิงก์</span>'
-                        ) +
-                    '</td>';
-                tbody.appendChild(row);
-            });
-            
-            console.log('✅ Table rendered with', filteredData.length, 'items from Google Apps Script');
-        }
-
-        // จัดรูปแบบวันที่สำหรับแสดงผล
-        function formatDisplayDate(dateString) {
-            if (!dateString) return '-';
-            
-            try {
-                const date = new Date(dateString);
-                if (isNaN(date.getTime())) return dateString; // ถ้าแปลงไม่ได้ให้แสดง string เดิม
-                
-                return date.toLocaleDateString('th-TH', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: '2-digit'
-                });
-            } catch (error) {
-                console.warn('Date formatting error:', error);
-                return dateString;
-            }
-        }
-
-        // อัปเดตสถิติ
-        function updateStats() {
-            const total = allData.length;
-            const caseStudy = allData.filter(item => item.type === 'กรณีศึกษา').length;
-            const original = allData.filter(item => item.type === 'งานนิพนธ์ต้นฉบับ').length;
-            
-            const currentYear = new Date().getFullYear();
-            const thisYear = allData.filter(item => {
-                if (!item.publishDate) return false;
-                const itemYear = new Date(item.publishDate).getFullYear();
-                return itemYear === currentYear;
-            }).length;
-
-            document.getElementById('totalCount').textContent = total;
-            document.getElementById('caseStudyCount').textContent = caseStudy;
-            document.getElementById('originalCount').textContent = original;
-            document.getElementById('thisYearCount').textContent = thisYear;
-        }
-
-        // ค้นหา
-        function performSearch() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            
-            if (!searchTerm) {
-                filteredData = [...allData];
-            } else {
-                filteredData = allData.filter(item => 
-                    (item.title && item.title.toLowerCase().includes(searchTerm)) ||
-                    (item.author && item.author.toLowerCase().includes(searchTerm)) ||
-                    (item.department && item.department.toLowerCase().includes(searchTerm)) ||
-                    (item.number && item.number.toLowerCase().includes(searchTerm))
-                );
-            }
-            
-            applyFilters();
-        }
-
-        // กรองข้อมูล
-        function applyFilters() {
-            const typeFilter = document.getElementById('typeFilter').value;
-            const languageFilter = document.getElementById('languageFilter').value;
-            
-            let data = [...filteredData];
-            
-            if (typeFilter) {
-                data = data.filter(item => item.type === typeFilter);
-            }
-            
-            if (languageFilter) {
-                data = data.filter(item => item.language === languageFilter);
-            }
-            
-            filteredData = data;
-            renderDynamicTable();
-        }
+        // ตัวแปรเก็บข้อมูลทั้งหมด
+        window.allData = [];
 
         // เปิด Modal รหัสผ่าน
         function openPasswordModal() {
@@ -1004,12 +782,286 @@
             }
         }
 
-        // ปิด modal เมื่อคลิกข้างนอก
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('passwordModal');
-            if (event.target === modal) {
-                closePasswordModal();
+        // แสดงข้อมูลในตาราง (ปรับปรุงให้รองรับบทคัดย่อ)
+        function displayData(data) {
+            const tableBody = document.querySelector('.research-table tbody');
+            
+            if (!Array.isArray(data) || data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #6c757d;">ยังไม่มีข้อมูลผลงานวิชาการ</td></tr>';
+                return;
             }
+
+            let html = '';
+            
+            data.forEach((item, index) => {
+                // แถวข้อมูลหลัก
+                html += `
+                    <tr>
+                        <td style="text-align: center; font-weight: 600; color: #667eea;">${item.id}</td>
+                        <td class="type-cell">
+                            <button class="type-button" onclick="toggleAbstract(${index})" id="type-btn-${index}">
+                                <span class="type-text">${item.type || 'ไม่ระบุ'}</span>
+                                <span class="expand-icon" id="icon-${index}">▼</span>
+                            </button>
+                        </td>
+                        <td>${item.publishDate || 'ไม่ระบุ'}</td>
+                        <td style="color: #495057; font-weight: 500;">${item.number || 'ไม่ระบุ'}</td>
+                        <td style="font-weight: 600; color: #212529;">${item.title || 'ไม่ระบุ'}</td>
+                        <td style="color: #6c757d;">${item.author || 'ไม่ระบุ'}</td>
+                        <td style="color: #6c757d;">${item.department || 'ไม่ระบุ'}</td>
+                        <td style="text-align: center;">
+                            ${item.downloadLink ? 
+                                `<a href="${item.downloadLink}" target="_blank" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-size: 12px; font-weight: 600; display: inline-block; transition: all 0.3s ease;">📁 ดาวน์โหลด</a>` : 
+                                '<span style="color: #6c757d; font-size: 12px;">ไม่มีไฟล์</span>'
+                            }
+                        </td>
+                        <td style="text-align: center;">
+                            <span style="background: ${item.language === 'ไทย' ? '#e3f2fd' : '#fff3e0'}; color: ${item.language === 'ไทย' ? '#1976d2' : '#f57c00'}; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600;">
+                                ${item.language === 'ไทย' ? '🇹🇭 ไทย' : item.language === 'English' ? '🇺🇸 EN' : item.language || 'ไม่ระบุ'}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+
+                // แถวบทคัดย่อ (ซ่อนไว้)
+                html += `
+                    <tr class="abstract-row" id="abstract-${index}">
+                        <td colspan="9">
+                            <div class="abstract-content">
+                                <div class="abstract-title">บทคัดย่อ</div>
+                                <div class="abstract-text">
+                                    ${item.abstract ? item.abstract : '<em style="color: #6c757d;">ไม่มีบทคัดย่อ</em>'}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tableBody.innerHTML = html;
+        }
+
+        // ฟังก์ชันสำหรับ toggle บทคัดย่อ
+        function toggleAbstract(index) {
+            const abstractRow = document.getElementById(`abstract-${index}`);
+            const typeButton = document.getElementById(`type-btn-${index}`);
+            const expandIcon = document.getElementById(`icon-${index}`);
+            
+            if (!abstractRow || !typeButton || !expandIcon) {
+                console.error('Elements not found for index:', index);
+                return;
+            }
+            
+            const isCurrentlyVisible = abstractRow.classList.contains('show');
+            
+            if (isCurrentlyVisible) {
+                // ซ่อนบทคัดย่อ
+                abstractRow.classList.remove('show');
+                typeButton.classList.remove('expanded');
+                expandIcon.classList.remove('rotated');
+                expandIcon.textContent = '▼';
+                console.log('Abstract hidden for index:', index);
+            } else {
+                // แสดงบทคัดย่อ
+                abstractRow.classList.add('show');
+                typeButton.classList.add('expanded');
+                expandIcon.classList.add('rotated');
+                expandIcon.textContent = '▲';
+                console.log('Abstract shown for index:', index);
+            }
+        }
+
+        // ฟังก์ชันสำหรับซ่อนบทคัดย่อทั้งหมด
+        function hideAllAbstracts() {
+            const abstractRows = document.querySelectorAll('.abstract-row');
+            const typeButtons = document.querySelectorAll('.type-button');
+            const expandIcons = document.querySelectorAll('.expand-icon');
+            
+            abstractRows.forEach(row => row.classList.remove('show'));
+            typeButtons.forEach(btn => btn.classList.remove('expanded'));
+            expandIcons.forEach(icon => {
+                icon.classList.remove('rotated');
+                icon.textContent = '▼';
+            });
+            
+            console.log('All abstracts hidden');
+        }
+
+        // ฟังก์ชันสำหรับกรองข้อมูล
+        function filterData() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const typeFilter = document.getElementById('typeFilter').value;
+            const yearFilter = document.getElementById('yearFilter').value;
+            
+            if (!window.allData || !Array.isArray(window.allData)) {
+                console.log('No data to filter');
+                return;
+            }
+
+            let filteredData = window.allData.filter(item => {
+                const matchesSearch = !searchTerm || 
+                    (item.title && item.title.toLowerCase().includes(searchTerm)) ||
+                    (item.author && item.author.toLowerCase().includes(searchTerm)) ||
+                    (item.department && item.department.toLowerCase().includes(searchTerm)) ||
+                    (item.abstract && item.abstract.toLowerCase().includes(searchTerm));
+                
+                const matchesType = !typeFilter || (item.type && item.type === typeFilter);
+                
+                const matchesYear = !yearFilter || (item.publishDate && item.publishDate.includes(yearFilter));
+                
+                return matchesSearch && matchesType && matchesYear;
+            });
+
+            console.log('Filtering data:', {
+                searchTerm,
+                typeFilter,
+                yearFilter,
+                totalItems: window.allData.length,
+                filteredItems: filteredData.length
+            });
+
+            displayData(filteredData);
+            
+            // ซ่อนบทคัดย่อทั้งหมดหลังจากกรองข้อมูล
+            setTimeout(hideAllAbstracts, 100);
+        }
+
+        // ฟังก์ชันสำหรับค้นหา
+        function performSearch() {
+            const searchInput = document.getElementById('searchInput');
+            if (!searchInput) return;
+            
+            const searchTerm = searchInput.value.trim();
+            console.log('Performing search:', searchTerm);
+            
+            filterData();
+        }
+
+        // ฟังก์ชันรีเซ็ตการค้นหา
+        function resetSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('typeFilter').value = '';
+            document.getElementById('yearFilter').value = '';
+            
+            console.log('Search reset');
+            
+            if (window.allData) {
+                displayData(window.allData);
+                // ซ่อนบทคัดย่อทั้งหมดหลังจากรีเซ็ต
+                setTimeout(hideAllAbstracts, 100);
+            }
+        }
+
+        // โหลดข้อมูลจาก Google Apps Script (ปรับปรุงให้รองรับบทคัดย่อ)
+        function loadDataFromGoogleSheets() {
+            console.log('🔍 Loading data from Google Apps Script: ' + GOOGLE_APPS_SCRIPT_URL);
+            
+            // แสดง loading
+            const tableBody = document.querySelector('.research-table tbody');
+            if (tableBody) {
+                tableBody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px;"><div class="loading-spinner"></div><p style="margin-top: 15px; color: #6c757d;">กำลังโหลดข้อมูล...</p></td></tr>';
+            }
+
+            fetch(GOOGLE_APPS_SCRIPT_URL + '?action=getPublicData&' + Date.now())
+                .then(response => {
+                    console.log('📡 Response status:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('📊 Data received:', data);
+                    
+                    if (Array.isArray(data)) {
+                        window.allData = data;
+                        displayData(data);
+                        updateFilters(data);
+                        console.log('✅ Data loaded successfully:', data.length, 'items');
+                    } else if (data && typeof data === 'object' && data.success === false) {
+                        console.log('📋 Response is object with error:', data.message);
+                        if (tableBody) {
+                            tableBody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #dc3545;">❌ ' + (data.message || 'เกิดข้อผิดพลาด') + '</td></tr>';
+                        }
+                    } else if (data && typeof data === 'object' && data.success === true) {
+                        console.log('📋 Response is object with success property');
+                        const actualData = data.data || [];
+                        window.allData = actualData;
+                        displayData(actualData);
+                        updateFilters(actualData);
+                        console.log('✅ Data loaded successfully:', actualData.length, 'items');
+                    } else {
+                        console.log('📋 Unexpected data format:', typeof data);
+                        if (tableBody) {
+                            tableBody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #6c757d;">ยังไม่มีข้อมูลผลงานวิชาการ</td></tr>';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('❌ Load data failed:', error.message);
+                    if (tableBody) {
+                        tableBody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #dc3545;">❌ ไม่สามารถโหลดข้อมูลได้: ' + error.message + '</td></tr>';
+                    }
+                });
+        }
+
+        // อัปเดตตัวกรองข้อมูล (ปรับปรุงให้รองรับบทคัดย่อ)
+        function updateFilters(data) {
+            const typeFilter = document.getElementById('typeFilter');
+            const yearFilter = document.getElementById('yearFilter');
+            
+            if (!typeFilter || !yearFilter) return;
+
+            // อัปเดตตัวกรองประเภท
+            const types = [...new Set(data.map(item => item.type).filter(Boolean))];
+            typeFilter.innerHTML = '<option value="">ทุกประเภท</option>';
+            types.forEach(type => {
+                typeFilter.innerHTML += `<option value="${type}">${type}</option>`;
+            });
+
+            // อัปเดตตัวกรองปี
+            const years = [...new Set(data.map(item => {
+                if (item.publishDate) {
+                    return item.publishDate.split('-')[0];
+                }
+                return null;
+            }).filter(Boolean))].sort((a, b) => b - a);
+            
+            yearFilter.innerHTML = '<option value="">ทุกปี</option>';
+            years.forEach(year => {
+                yearFilter.innerHTML += `<option value="${year}">${year}</option>`;
+            });
+        }
+
+        // โหลดข้อมูลเมื่อเปิดหน้า
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Public page loaded, loading data from Google Apps Script...');
+            loadDataFromGoogleSheets();
+            
+            // เพิ่ม event listener สำหรับกด Enter ในช่องรหัสผ่าน
+            const passwordInput = document.getElementById('passwordInput');
+            if (passwordInput) {
+                passwordInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkPassword();
+                    }
+                });
+            }
+
+            // เพิ่ม event listener สำหรับกด Enter ในช่องค้นหา
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+            }
+
+            // ปิด modal เมื่อคลิกข้างนอก
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('passwordModal');
+                if (modal && event.target === modal) {
+                    closePasswordModal();
+                }
+            });
         });
     </script>
 </body>
