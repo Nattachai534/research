@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เผยแพร่ผลงานวิชาการพยาบาล ภารกิจด้านการพยาบาล โรงพยาบาลราชวิถี</title>
+    <title>เผยแพร่ผลงานวิชาการพยาบาล โรงพยาบาลราชวิถี</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -545,7 +545,7 @@
     <div class="header">
         <div class="header-content">
             <h1>🏥 เผยแพร่ผลงานวิชาการพยาบาล</h1>
-            <p>ภารกิจด้านการพยาบาล โรงพยาบาลราชวิถี</p>
+            <p>โรงพยาบาลราชวิถี กรุงเทพมหานคร</p>
         </div>
         <button class="admin-button" onclick="openPasswordModal()">🔐 จัดการข้อมูล</button>
     </div>
@@ -627,7 +627,7 @@
 
     <!-- Footer -->
     <div class="footer">
-        <p>&copy; 2025 งานถ่ายทอดการพยาบาล ภารกิจด้านการพยาบาล โรงพยาบาลราชวิถี | ระบบจัดการผลงานวิชาการพยาบาล</p>
+        <p>&copy; 2024 โรงพยาบาลราชวิถี กรุงเทพมหานคร | ระบบจัดการผลงานวิชาการพยาบาล</p>
     </div>
 
     <!-- Password Modal -->
@@ -862,6 +862,44 @@
             }
         }
 
+        // ฟังก์ชันจัดรูปแบบวันที่ให้เป็น "00-May-25"
+        function formatDateDisplay(dateString) {
+            if (!dateString) return 'ไม่ระบุ';
+            
+            try {
+                let date;
+                
+                // ถ้าเป็น string ให้แปลงเป็น Date object
+                if (typeof dateString === 'string') {
+                    date = new Date(dateString);
+                } else if (dateString instanceof Date) {
+                    date = dateString;
+                } else {
+                    return 'ไม่ระบุ';
+                }
+                
+                // ตรวจสอบว่าวันที่ถูกต้องหรือไม่
+                if (isNaN(date.getTime())) {
+                    return 'ไม่ระบุ';
+                }
+                
+                // Array ชื่อเดือนภาษาอังกฤษ (3 ตัวอักษร)
+                const monthNames = [
+                    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+                ];
+                
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = monthNames[date.getMonth()];
+                const year = String(date.getFullYear()).slice(-2);
+                
+                return `${day}-${month}-${year}`;
+            } catch (error) {
+                console.error('Error formatting date:', error);
+                return 'ไม่ระบุ';
+            }
+        }
+
         // แสดงข้อมูลในตาราง (ปรับปรุงให้รองรับบทคัดย่อ)
         function displayData(data) {
             const tableBody = document.querySelector('.research-table tbody');
@@ -884,8 +922,8 @@
                                 <span class="expand-icon" id="icon-${index}">▼</span>
                             </button>
                         </td>
-                        <td>${item.publishDate || 'ไม่ระบุ'}</td>
-                        <td style="color: #495057; font-weight: 500;">${item.number || 'ไม่ระบุ'}</td>
+                        <td style="text-align: center;">${formatDateDisplay(item.publishDate)}</td>
+                        <td style="color: #495057; font-weight: 500; text-align: center;">${item.number || 'ไม่ระบุ'}</td>
                         <td style="font-weight: 600; color: #212529;">${item.title || 'ไม่ระบุ'}</td>
                         <td style="color: #6c757d;">${item.author || 'ไม่ระบุ'}</td>
                         <td style="color: #6c757d;">${item.department || 'ไม่ระบุ'}</td>
