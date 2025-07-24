@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เผยแพร่ผลงานวิชาการพยาบาล ภารกิจด้านการพยาบาล โรงพยาบาลราชวิถี</title>
+    <title>เผยแพร่ผลงานวิชาการพยาบาล โรงพยาบาลราชวิถี</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -605,7 +605,7 @@
     <div class="header">
         <div class="header-content">
             <h1>🏥 เผยแพร่ผลงานวิชาการพยาบาล</h1>
-            <p>ภารกิจด้านการพยาบาล โรงพยาบาลราชวิถี</p>
+            <p>โรงพยาบาลราชวิถี กรุงเทพมหานคร</p>
         </div>
         <button class="admin-button" onclick="openPasswordModal()">🔐 จัดการข้อมูล</button>
     </div>
@@ -621,8 +621,8 @@
                     <option value="">ทุกประเภท</option>
                 </select>
                 
-                <select class="filter-select" id="yearFilter" onchange="filterData()">
-                    <option value="">ทุกปี</option>
+                <select class="filter-select" id="departmentFilter" onchange="filterData()">
+                    <option value="">ทุกแผนก</option>
                 </select>
                 
                 <div class="search-buttons">
@@ -687,7 +687,7 @@
 
     <!-- Footer -->
     <div class="footer">
-        <p>&copy; 2025 งานถ่ายทอดการพยาบาล ภารกิจด้านการพยาบาล โรงพยาบาลราชวิถี | ระบบจัดการผลงานวิชาการพยาบาล</p>
+        <p>&copy; 2024 โรงพยาบาลราชวิถี กรุงเทพมหานคร | ระบบจัดการผลงานวิชาการพยาบาล</p>
     </div>
 
     <!-- Password Modal -->
@@ -1138,7 +1138,7 @@
         function filterData() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const typeFilter = document.getElementById('typeFilter').value;
-            const yearFilter = document.getElementById('yearFilter').value;
+            const departmentFilter = document.getElementById('departmentFilter').value;
             
             if (!window.allData || !Array.isArray(window.allData)) {
                 console.log('No data to filter');
@@ -1154,15 +1154,15 @@
                 
                 const matchesType = !typeFilter || (item.type && item.type === typeFilter);
                 
-                const matchesYear = !yearFilter || (item.publishDate && item.publishDate.includes(yearFilter));
+                const matchesDepartment = !departmentFilter || (item.department && item.department === departmentFilter);
                 
-                return matchesSearch && matchesType && matchesYear;
+                return matchesSearch && matchesType && matchesDepartment;
             });
 
             console.log('Filtering data:', {
                 searchTerm,
                 typeFilter,
-                yearFilter,
+                departmentFilter,
                 totalItems: window.allData.length,
                 filteredItems: filteredData.length
             });
@@ -1188,7 +1188,7 @@
         function resetSearch() {
             document.getElementById('searchInput').value = '';
             document.getElementById('typeFilter').value = '';
-            document.getElementById('yearFilter').value = '';
+            document.getElementById('departmentFilter').value = '';
             
             console.log('Search reset');
             
@@ -1249,12 +1249,12 @@
                 });
         }
 
-        // อัปเดตตัวกรองข้อมูล (ปรับปรุงให้รองรับบทคัดย่อ)
+        // อัปเดตตัวกรองข้อมูล (ปรับปรุงให้รองรับแผนกแทนปี)
         function updateFilters(data) {
             const typeFilter = document.getElementById('typeFilter');
-            const yearFilter = document.getElementById('yearFilter');
+            const departmentFilter = document.getElementById('departmentFilter');
             
-            if (!typeFilter || !yearFilter) return;
+            if (!typeFilter || !departmentFilter) return;
 
             // อัปเดตตัวกรองประเภท
             const types = [...new Set(data.map(item => item.type).filter(Boolean))];
@@ -1263,17 +1263,17 @@
                 typeFilter.innerHTML += `<option value="${type}">${type}</option>`;
             });
 
-            // อัปเดตตัวกรองปี
-            const years = [...new Set(data.map(item => {
-                if (item.publishDate) {
-                    return item.publishDate.split('-')[0];
-                }
-                return null;
-            }).filter(Boolean))].sort((a, b) => b - a);
+            // อัปเดตตัวกรองแผนก
+            const departments = [...new Set(data.map(item => item.department).filter(Boolean))].sort();
             
-            yearFilter.innerHTML = '<option value="">ทุกปี</option>';
-            years.forEach(year => {
-                yearFilter.innerHTML += `<option value="${year}">${year}</option>`;
+            departmentFilter.innerHTML = '<option value="">ทุกแผนก</option>';
+            departments.forEach(department => {
+                departmentFilter.innerHTML += `<option value="${department}">${department}</option>`;
+            });
+
+            console.log('Filters updated:', {
+                types: types,
+                departments: departments
             });
         }
 
